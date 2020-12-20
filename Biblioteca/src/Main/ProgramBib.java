@@ -4,7 +4,12 @@ public class ProgramBib {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println("Lib5");
+		
+	}
+	
+	
+	public boolean temLicenca(boolean licenca) {
+		return licenca;
 	}
 
 }
