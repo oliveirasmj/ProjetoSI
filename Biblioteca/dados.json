@@ -1,0 +1,9 @@
+{
+    "nome": "paulo",
+    "idade": 31,
+    "lista": ["Item 1", "Item 2", "Item 3"],
+    "cidade":{
+        "nome":"Rio de janeiro",
+        "estado": "RJ"
+    }
+}
