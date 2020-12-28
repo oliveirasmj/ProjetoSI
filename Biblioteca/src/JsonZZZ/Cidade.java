@@ -1,4 +1,4 @@
-package JsonToObject;
+package JsonZZZ;
 public class Cidade {
 
     private String nome;
