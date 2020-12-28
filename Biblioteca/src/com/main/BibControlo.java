@@ -1,11 +1,7 @@
 package com.main;
 
 import java.io.IOException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.google.gson.Gson;
+import org.json.simple.JSONObject;
 import Helpers.WriteToFile;
 import SystemInfo.SystemInfo;
 import UserInf.UserInfo;
@@ -21,49 +17,49 @@ public class BibControlo {
 		return true;
 	}
 
-	public static void main(String[] args) throws IOException, JSONException {
+	public static void main(String[] args) throws IOException {
 		obterDadosSO();
 	}
 
-	public static void obterDadosSO() throws IOException, JSONException {
+	@SuppressWarnings("unchecked")
+	public static void obterDadosSO() throws IOException {
 		// instanciar objetos
 		SystemInfo sy = new SystemInfo();
-		Gson gson = new Gson();
-		JSONObject jso1 = new JSONObject();
-		JSONObject jso2 = new JSONObject();
-		
-		  
-		 
-
-		WriteToFile fw = new WriteToFile();
 		UserInfo currentUser = new UserInfo();
-		
-		// ESTE BLOCO DE CODIGO NAO DÁ MAS É ALGO ASSIM PARA JUJNTAR OS 2 objectos USER E SISTEMA
-		// AMOBOS OBJETOS ESTAO CRIADO BASTA CORRERES O FICHEIRO BIB 
-		
-		//
-		/*
-		 * 
-		JSONObject Obj1 = (JSONObject) jso1.get(sy.toString()); 
-		  JSONObject Obj2 =(JSONObject) jso2.get(currentUser.toString()); 
-		  JSONObject combined = new JSONObject();
-		  combined.put("Systema", Obj1); combined.put("User", Obj2);
-*/
+
 		System.out.println("utilizador criado através de  cartao de cidadao: " + currentUser);
-		// Criar ficheiro
-		// converte objetos Java para JSON e retorna JSON como Strin
-		
-		//TODO: String de user com gson nao da
-		//String json = gson.toJson(currentUser);
 
-		// variaveis locais
-			String caminhoFicheiroJson = "./licenca.json";
-
-		// converte objetos Java para JSON e retorna JSON como String
-		 String json = gson.toJson(sy);
-		 
-		 //cria ficheiro de licenca, chama funcao em package HELPER
-		 fw.writeFile(json, caminhoFicheiroJson);
+		//SystemObj
+    	JSONObject SystemObj = new JSONObject();
+    	SystemObj.put("macAdress", sy.getMac());
+    	SystemObj.put("motherBoardSerial", sy.getMotherBoardSerial());
+    	SystemObj.put("userName", sy.getUserName());
+    	SystemObj.put("hostName", sy.getHostName());
+    	SystemObj.put("cpuSerial", sy.getCpuSerial());
+    	
+    	//UserObj
+    	JSONObject UserObj = new JSONObject();
+    	UserObj.put("name", currentUser.getName());
+    	UserObj.put("email", currentUser.getEmail());
+    	UserObj.put("nic", currentUser.getNic());
+    	
+    	//Ambos
+    	JSONObject detailsList = new JSONObject();
+    	detailsList.put("system", SystemObj);
+    	detailsList.put("user", UserObj);
+    	
+    	
+//    	//Write JSON file
+//    	try (FileWriter file = new FileWriter("./licenca.json")) {
+//
+//            file.write(detailsList.toJSONString());
+//            file.flush();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    	WriteToFile fw = new WriteToFile();
+    	fw.writeFile(detailsList, "./licenca.json");
 
 	}
 

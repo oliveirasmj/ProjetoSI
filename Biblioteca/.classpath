@@ -6,7 +6,8 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Hugo/OneDrive/Aulas/Licenciatura/3Ano/1Semestre/SegurançaInformatica/Trabalhos Práticos/ProjetoSI/ProjetoSI/Biblioteca/java-libs/gson-2.6.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Hugo/OneDrive/Aulas/Licenciatura/3Ano/1Semestre/SegurançaInformatica/Trabalhos Práticos/ProjetoSI/ProjetoSI/Biblioteca/java-libs/java-json.jar"/>
+	<classpathentry kind="lib" path="C:/Git/ProjetoSI/Biblioteca/java-libs/gson-2.6.2.jar"/>
+	<classpathentry kind="lib" path="C:/Git/ProjetoSI/Biblioteca/java-libs/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Git/ProjetoSI/Biblioteca/java-libs/java-json.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

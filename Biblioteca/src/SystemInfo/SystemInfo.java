@@ -74,6 +74,48 @@ public class SystemInfo {
 		return sb.toString();
 
 	}
+	
+	
+
+	public String getMacAdress() {
+		return macAdress;
+	}
+
+	public void setMacAdress(String macAdress) {
+		this.macAdress = macAdress;
+	}
+
+	public String getMotherBoardSerial() {
+		return motherBoardSerial;
+	}
+
+	public void setMotherBoardSerial(String motherBoardSerial) {
+		this.motherBoardSerial = motherBoardSerial;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
+	public String getCpuSerial() {
+		return cpuSerial;
+	}
+
+	public void setCpuSerial(String cpuSerial) {
+		this.cpuSerial = cpuSerial;
+	}
 
 	@Override
 	public String toString() {

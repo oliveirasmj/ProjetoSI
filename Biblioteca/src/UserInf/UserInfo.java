@@ -63,9 +63,9 @@ public class UserInfo {
   
     
     @Override
-    public String toString() {
-        return this.name + " " + this.nic;
-    }
+	public String toString() {
+		return "UserInfo [name=" + name + ", email=" + email + ", nic=" + nic + ", uc=" + uc + "]";
+	}
     
     
     
