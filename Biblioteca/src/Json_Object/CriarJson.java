@@ -36,9 +36,9 @@ public class CriarJson {
 		
 		//Criar ficheiro
 		//converte objetos Java para JSON e retorna JSON como String
+		//Escreve Json convertido em arquivo chamado "file.json"
 		String json = gson.toJson(f);
 		try {
-			//Escreve Json convertido em arquivo chamado "file.json"
 			//FileWriter writer = new FileWriter("C:\\Users\\miguel.oliveira\\Downloads\\file.json");
 			FileWriter writer = new FileWriter("./filme.json");
 			writer.write(json);

@@ -1,10 +1,15 @@
 package Home;
 
 
+import java.util.Scanner;
+
+import javax.sound.midi.Soundbank;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import com.main.BibControlo;
+
+
 
 
 public class Program extends JFrame {
@@ -13,7 +18,13 @@ public class Program extends JFrame {
 			
 		BibControlo licenca = new BibControlo();
 		
-		if( licenca.temLicenca(false) ) {
+		boolean ficheiroComLicenca = false;
+		//procurar ficheiro de licenca
+		
+
+		if(ficheiroComLicenca) {
+			//tem ficheiro com licenca
+			//depois e validar
 			Program home = new Program();
 			home.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			home.setSize(500, 500);
@@ -25,17 +36,25 @@ public class Program extends JFrame {
 			lblText.setBounds(125,125,300,125);
 			home.add(lblText);
 		}else {
-			Program home = new Program();
-			home.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			home.setSize(500, 500);
-			home.setVisible(true);
-			home.setTitle("Home");
-			home.setLocationRelativeTo(null);
+			//nao encontra a licenca
+			//questionar se quer criar uma nova licenca
 			
-			JLabel lblText = new JLabel("Não tem licenca para estar aqui");
-			lblText.setBounds(125,125,300,125);
-			home.add(lblText);
+			Scanner sc = new java.util.Scanner(System.in);
+			System.out.println("Não foi encontrada nenhuma licenaça válida deseja criar uma? ");
+			System.out.println("Se sim prima 1. Caso deseje terminar a execução prima 0");
+			int opcao = sc.nextInt();
+			switch(opcao) {
+			  case 1:
+				  licenca.criaLicenca();
+			    break;
+			  case 0:
+				  System.exit(0);
+			    break;
+			 
+			}
+			
 		}
+		
 		
 		
 		
