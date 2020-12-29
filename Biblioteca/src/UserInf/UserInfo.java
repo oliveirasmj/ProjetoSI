@@ -5,8 +5,8 @@
  */
 package UserInf;
 
-
-
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class UserInfo {
 
@@ -59,6 +59,17 @@ public class UserInfo {
         this.setNic(s[1].split("=")[1]);
         this.setName(s[2].split("=")[1] + " " + s[3].split("=")[1]);
         s = null;
+    }
+    
+    public JSONObject userJson() throws JSONException {
+    	
+      	//UserObj
+    	JSONObject UserObj = new JSONObject();
+    	UserObj.put("name", this.getName());
+    	UserObj.put("email", this.getEmail());
+    	UserObj.put("nic", this.getNic());
+    	
+    	return UserObj;
     }
   
     

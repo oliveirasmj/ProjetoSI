@@ -1,9 +1,12 @@
 package Helpers;
 
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
+
+
 
 public class WriteToFile {
 
@@ -16,7 +19,7 @@ public class WriteToFile {
 		try {
 			//FileWriter writer = new FileWriter("C:\\Users\\miguel.oliveira\\Downloads\\file.json");
 			FileWriter writer = new FileWriter(caminho);
-			writer.write(json.toJSONString());
+			writer.write(json.toString());
 			writer.close();
 			System.out.println("Ficheiro criado com: "+ json + " criado com sucesso em: " + caminho );
 			return true;
@@ -26,4 +29,22 @@ public class WriteToFile {
 		}
 		
 	}
+	
+	 
+    /**
+     * function used to write to or a new file
+     * @param nomeFicheiro name of the file to write
+     * @param contiudo content of the file to be written
+     */
+    public static void writeToFileByte(String nomeFicheiro, byte[] conteudo) throws IOException{
+        try {
+            FileOutputStream fos = new FileOutputStream(nomeFicheiro);
+            fos.write(conteudo);
+            fos.close();
+        } catch (Exception e) {
+            System.out.println("erro a escrever ficheiro: " + e);
+            throw new IOException();
+        }
+        
+    }
 }

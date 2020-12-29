@@ -6,6 +6,9 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class SystemInfo {
 
 	private String macAdress, motherBoardSerial, userName, hostName, cpuSerial;
@@ -116,6 +119,20 @@ public class SystemInfo {
 	public void setCpuSerial(String cpuSerial) {
 		this.cpuSerial = cpuSerial;
 	}
+	
+	
+	public JSONObject systemJSON() throws JSONException {
+		
+		JSONObject SystemObj = new JSONObject();
+    	SystemObj.put("macAdress", this.getMac());
+    	SystemObj.put("motherBoardSerial", this.getMotherBoardSerial());
+    	SystemObj.put("userName", this.getUserName());
+    	SystemObj.put("hostName", this.getHostName());
+    	SystemObj.put("cpuSerial", this.getCpuSerial());
+		
+		return SystemObj;
+	}
+	
 
 	@Override
 	public String toString() {

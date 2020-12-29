@@ -1,66 +1,86 @@
 package com.main;
 
+import java.io.File;
 import java.io.IOException;
-import org.json.simple.JSONObject;
+import java.security.cert.CertificateException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
+
+import AppInfo.ApplicationInfo;
 import Helpers.WriteToFile;
 import SystemInfo.SystemInfo;
 import UserInf.UserInfo;
+import static globalMethods.globalMethods.*;
+import static globalMethods.SymmetricKey.*;
+import static globalMethods.AsymmetricKey.*;
 
 public class BibControlo {
+	private Licenca license;
+//	private String pathToDirLicenca;
+	
 	// private UserInfo currentUser;
 	public BibControlo() {
 	}
 
-	// se programa não encontra a licenca
-	// cria uma
-	public boolean criaLicenca() {
-		return true;
+
+	public static void main(String[] args) throws IOException, JSONException, CertificateException {
+		
+		//verifica se existe a pasta de licensas
+		//se não existir cria a pasta
+		File licenseDir = new File("licencas");
+        if(!licenseDir.exists())
+            licenseDir.mkdir();
+        
+        //verifica se a licenca existe, senao cria
+        verificaSeLicencaExiste(System.getProperty("user.dir") + "/BibliotecaJar.jar");
 	}
 
-	public static void main(String[] args) throws IOException {
-		obterDadosSO();
-	}
+	
+	/**
+	 * 
+	 * É aqui que chama as classes para obter os dados das licencas e para criar os ficheiros
+	 *  Na classe de licenca e que a mesma é criada e os ficheiros gerados
+	 * 
+	 * @param pathToUser caminho do jar a criar o hash
+	 * @return boolean caso consiga criar a licenca ou se existir ou nao 
+	 * @throws IOException
+	 * @throws CertificateException
+	 */
+	public static boolean verificaSeLicencaExiste(String pathToUser) throws IOException, CertificateException{
+        File licenseFile = new File(pathToUser + "license");
+        File encryptedLicenseFile = new File(pathToUser + "encryptedLicense");
+        
+        //Não percebi muito bem esta logica, mas é aqui que chama a criação dos ficheiros de licenca, na funcao novaLicenca da classe licensa
+        if(!licenseFile.exists() && !encryptedLicenseFile.exists()){
+            System.out.println("No license found!\ncreating a new license request");
+            Licenca license = new Licenca();
+            boolean criouLicenca = license.novaLicenca(pathToUser, 0);
+           return criouLicenca;
+        }else{
+        	
+        	//TODO NAO SEI O QUE AINDA FAZ
+            if(encryptedLicenseFile.exists()){
+                System.out.println("decrypting license file");
+                //decript file
+                byte[] SymmetricKey = readFromFile(pathToUser + "SymmetricKey");
+                byte[] encryptedLicense = readFromFile(pathToUser + "encryptedLicense");
+                byte[] decryptedLicense = decipher(SymmetricKey, encryptedLicense);
+                writeToFile(pathToUser + "license", decryptedLicense);
+                encryptedLicenseFile.delete();
+                //TODO: assinar licença nova e verificar se esta se mantem // ou se calhar não
+            }
+            
+            byte[] licenseBytes = readFromFile(pathToUser + "license");
+            String licenseString = bytesToStringPrint(licenseBytes);
 
-	@SuppressWarnings("unchecked")
-	public static void obterDadosSO() throws IOException {
-		// instanciar objetos
-		SystemInfo sy = new SystemInfo();
-		UserInfo currentUser = new UserInfo();
-
-		System.out.println("utilizador criado através de  cartao de cidadao: " + currentUser);
-
-		//SystemObj
-    	JSONObject SystemObj = new JSONObject();
-    	SystemObj.put("macAdress", sy.getMac());
-    	SystemObj.put("motherBoardSerial", sy.getMotherBoardSerial());
-    	SystemObj.put("userName", sy.getUserName());
-    	SystemObj.put("hostName", sy.getHostName());
-    	SystemObj.put("cpuSerial", sy.getCpuSerial());
-    	
-    	//UserObj
-    	JSONObject UserObj = new JSONObject();
-    	UserObj.put("name", currentUser.getName());
-    	UserObj.put("email", currentUser.getEmail());
-    	UserObj.put("nic", currentUser.getNic());
-    	
-    	//Ambos
-    	JSONObject detailsList = new JSONObject();
-    	detailsList.put("system", SystemObj);
-    	detailsList.put("user", UserObj);
-    	
-    	
-//    	//Write JSON file
-//    	try (FileWriter file = new FileWriter("./licenca.json")) {
-//
-//            file.write(detailsList.toJSONString());
-//            file.flush();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-    	WriteToFile fw = new WriteToFile();
-    	fw.writeFile(detailsList, "./licenca.json");
-
-	}
+            Licenca license = new Licenca();
+            //TODO tenta fazer o read do json
+          //  license.readLicenseFromJsonString(licenseString);
+            return true;
+        }
+    }
 
 }
