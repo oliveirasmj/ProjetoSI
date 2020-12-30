@@ -5,8 +5,12 @@
  */
 package UserInf;
 
+import java.io.File;
+import java.security.cert.CertificateEncodingException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+import static globalMethods.globalMethods.bytesEncodeBase64;
 
 public class UserInfo {
 
@@ -61,13 +65,28 @@ public class UserInfo {
         s = null;
     }
     
-    public JSONObject userJson() throws JSONException {
+    public JSONObject userJson() throws JSONException, CertificateEncodingException {
     	
       	//UserObj
     	JSONObject UserObj = new JSONObject();
     	UserObj.put("name", this.getName());
     	UserObj.put("email", this.getEmail());
     	UserObj.put("nic", this.getNic());
+    	
+    	 byte[] certificate = uc.getPublicCertificate().getEncoded();
+    	 
+         String path = "licencas/" + this.name + "/temp/";
+         File dir = new File(path);
+         if(!dir.exists())
+             dir.mkdir();
+         
+
+         //verificar o certificado do utilizador
+         if(uc.verificarCertificado(certificate))
+        	 UserObj.put("certificate", bytesEncodeBase64(certificate));
+
+         
+        
     	
     	return UserObj;
     }

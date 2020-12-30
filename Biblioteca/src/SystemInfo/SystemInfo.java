@@ -25,6 +25,14 @@ public class SystemInfo {
 		this.hostName = getSystemName();
 		this.cpuSerial = CPUSerial.getCPUSerial();
 	}
+	
+    public SystemInfo(String macAdress, String motherboardserial, String username, String hostname, String cpuserial) {
+        this.macAdress = macAdress;
+        this.motherBoardSerial = motherboardserial;
+        this.userName = username;
+        this.hostName = hostname;
+        this.cpuSerial = cpuserial;
+    }
 
 	/**
 	 * Obtem o nome do sistema

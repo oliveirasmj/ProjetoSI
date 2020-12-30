@@ -59,8 +59,8 @@ public class UserCrypto {
     
     /**
      * function used to get the signature byes of a data
-     * @param bytesToSign bytes of data to be signed
-     * @return byte array 
+     * @param array de bytes a serem assinados
+     * @return Array de bytes
      * @throws KeyStoreException
      * @throws NoSuchAlgorithmException
      * @throws UnrecoverableKeyException
@@ -155,11 +155,12 @@ public class UserCrypto {
             InputStream is = new ByteArrayInputStream(certificateBytes);
             CertificateFactory fact = CertificateFactory.getInstance("X.509");
             X509Certificate cert = (X509Certificate) fact.generateCertificate(is);
+            //verifica se certificado obtido atraves dos bytes do json lido È valido
             cert.checkValidity();
             System.out.println("certificado valido");
             return true;
         } catch (Exception e) {
-            System.out.println("certificado inv√°lido");
+            System.out.println("certificado inv·lido");
             return false;
         }
     }
