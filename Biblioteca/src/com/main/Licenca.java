@@ -76,10 +76,11 @@ public class Licenca {
 			if (!dirTemp.exists())
 				dirTemp.mkdir();
 
-			// torna objectoJson da licenca em array de bytes
+			// torna objectoJson da licenca em array de bytes - licenseInfo(user, system, app)
 			byte[] licenseBytes = licenseInfo.toString().getBytes();
 
-			// torna array de bytes da licena em array de baite para Assinatura do cartao
+			// torna array de bytes da licenca em array de byte para Assinatura do cartao
+			// a assintura é um hash da licenca encriptado com a chave privada para comprovar que a licenca nao foi alterada
 			byte[] licenseSignatureBytes = user.uc.getSignatureOfData(licenseBytes);
 			// cria ficheiro com nome do utilziador - signatura assinatura
 			fw.writeToFileByte(pathTemp + user.getName() + " - signature", licenseSignatureBytes);
@@ -94,11 +95,11 @@ public class Licenca {
 			license.put("signature", signature);
 			writeToFile(pathTemp + user.getName() + " - licenca", license.toString().getBytes());
 
-			// gera cahve simaterica
+			// gera chave simetrica
 			byte[] key = generateKey();
 			// guarda no ficheiro symmetrickey a chave simetrica
 			writeToFile(path + "SymmetricKey", key);
-			// cifra a chave simetrica
+			// cifra com a chave simetrica
 			writeToFile(path + "cipheredLicenseRequest", cipher(key, license.toString().getBytes()));
 
 			// ----- segundo pacote -----

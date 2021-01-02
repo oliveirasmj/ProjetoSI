@@ -59,23 +59,20 @@ public class BibControlo {
 		File licenseDir = new File("licencas");
 
 		if (!licenseDir.exists())
-			licenseDir.mkdir();
+			licenseDir.mkdir(); //se não existir cria a pasta "licencas"
 
-		UserInfo currentUser = new UserInfo();
-		String pathToUser = "licencas/" + currentUser.getName() + "/";
+		UserInfo currentUser = new UserInfo(); //vai buscar info do User do CC ligado + Certificado do User
+		String pathToUser = "licencas/" + currentUser.getName() + "/"; //cria string com path
 
-		File licenseFile = new File(pathToUser + "license");
-		File encryptedLicenseFile = new File(pathToUser + "encryptedLicense");
+		File licenseFile = new File(pathToUser + "license"); //instancia um ficheiro com o path/licence
+		File encryptedLicenseFile = new File(pathToUser + "encryptedLicense"); //instancia um ficheiro para o caminho de licenca encriptada
 
-		System.out.println("encryptedLicenseFileexiste?: " + encryptedLicenseFile.exists());
-
-		if (!licenseFile.exists() && !encryptedLicenseFile.exists()) {
+		
+		if (!licenseFile.exists() && !encryptedLicenseFile.exists()) { //senao existir licenca nem licenca encriptada
 			System.out.println("No license found!\ncreating a new license request");
 			return false;
 		} else {
-			// VERIFICA SE EXISTE FICHEIRO DE licensa encriptada e se existiar entao
-			// desencripta e depois gera licenca "limpa"
-			System.out.println(encryptedLicenseFile.exists());
+		
 
 			if (encryptedLicenseFile.exists()) {
 				System.out.println("decrypting license file");

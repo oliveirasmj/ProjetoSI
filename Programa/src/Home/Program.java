@@ -19,7 +19,7 @@ public class Program extends JFrame {
 
 	public static void main(String[] args) throws CertificateException, IOException, ParseException, JSONException {
 
-		BibControlo cb = new BibControlo();
+		BibControlo cb = new BibControlo(); //instancia a biblioteca importada
 
 		if (cb.verificaSeLicencaExiste()) {
 			// tem ficheiro com licenca
