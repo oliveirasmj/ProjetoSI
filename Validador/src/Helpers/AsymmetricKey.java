@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package globalMethods;
+package Helpers;
 
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -14,10 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Cipher;
 
-/**
- *
- * @author diogo
- */
+
 public class AsymmetricKey {
     /**
      * function used cipher content using a asymmetric key
@@ -61,4 +58,6 @@ public class AsymmetricKey {
             return null;
         }
     }
+    
+  
 }

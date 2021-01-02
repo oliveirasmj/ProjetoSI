@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package globalMethods;
+package Helpers;
 
 import java.io.FileOutputStream;
 import java.security.NoSuchAlgorithmException;
@@ -15,10 +15,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-/**
- *
- * @author diogo
- */
+
 public class SymmetricKey {
     /**
      * function used to generate a symmetric key , to be used to cipher a new license

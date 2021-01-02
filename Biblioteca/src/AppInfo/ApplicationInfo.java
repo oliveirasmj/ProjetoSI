@@ -6,8 +6,10 @@
 package AppInfo;
 
 import java.security.MessageDigest;
-import globalMethods.globalMethods;
+
 import org.json.*;
+
+import Helpers.globalMethods;
 
 
 public class ApplicationInfo {

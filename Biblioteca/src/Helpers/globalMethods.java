@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package globalMethods;
+package Helpers;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,10 +11,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 
-/**
- *
- * @author diogo
- */
+
 public class globalMethods {
     /**
      * function used to read a file a retrive its bytes

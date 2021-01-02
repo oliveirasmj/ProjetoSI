@@ -1,5 +1,13 @@
 package com.main;
 
+import static Helpers.AsymmetricKey.asymmetricCipher;
+import static Helpers.SymmetricKey.cipher;
+import static Helpers.SymmetricKey.generateKey;
+import static Helpers.globalMethods.bytesEncodeBase64;
+import static Helpers.globalMethods.readFromFile;
+import static Helpers.globalMethods.stringDecodeBase64;
+import static Helpers.globalMethods.writeToFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.security.KeyFactory;
@@ -8,8 +16,8 @@ import java.security.PublicKey;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.text.ParseException;
 
 import org.json.JSONException;
@@ -19,14 +27,6 @@ import AppInfo.ApplicationInfo;
 import Helpers.WriteToFile;
 import SystemInfo.SystemInfo;
 import UserInf.UserInfo;
-import static globalMethods.AsymmetricKey.asymmetricCipher;
-import static globalMethods.SymmetricKey.cipher;
-import static globalMethods.SymmetricKey.generateKey;
-import static globalMethods.globalMethods.bytesEncodeBase64;
-import static globalMethods.globalMethods.stringDecodeBase64;
-import static globalMethods.globalMethods.readFromFile;
-import static globalMethods.globalMethods.stringDecodeBase64;
-import static globalMethods.globalMethods.writeToFile;
 
 public class Licenca {
 
@@ -110,6 +110,7 @@ public class Licenca {
 			// cifra a chave simetrica que guardou a licenca com chave a chave assimetrica
 			// guarda o ficheiro cifrado com o nome ciphredKeyRequest
 			byte[] authorPublicKey = getAuthorPublicKey().getEncoded();
+			System.out.println("authorPublicKey : " + authorPublicKey.length);
 			writeToFile(path + "cipheredKeyRequest", asymmetricCipher(authorPublicKey, theKey.toString().getBytes()));
 
 			System.out.println("\n\nFicheiro criados");
@@ -152,13 +153,13 @@ public class Licenca {
 		this.authorSignatureBytes = stringDecodeBase64(jsonLicense.getJSONObject("signature").getString("signature"));
 
 	
-		//falta validar datas adicionadas em autor
-		/*
-		 * this.startDate = (Date)
-		 * formatter.parse(licenseInfo.getJSONObject("dates").getString("startDate"));
-		 * this.endDate = (Date)
-		 * formatter.parse(licenseInfo.getJSONObject("dates").getString("endDate"));
-		 */
+
+		
+		  this.startDate = (Date)
+		  formatter.parse(licenseInfo.getJSONObject("dates").getString("startDate"));
+		  this.endDate = (Date)
+		  formatter.parse(licenseInfo.getJSONObject("dates").getString("endDate"));
+		 
 
 	}
 

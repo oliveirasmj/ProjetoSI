@@ -31,8 +31,8 @@ public class Program extends JFrame {
 			home.setTitle("Home");
 			home.setLocationRelativeTo(null);
 
-			JLabel lblText = new JLabel(System.getProperty("os.name"));
-			lblText.setBounds(125, 125, 300, 125);
+			JLabel lblText = new JLabel("Seja bem vindo ao programa mais seguro do mundo!");
+			lblText.setBounds(250, 250, 300, 300);
 			home.add(lblText);
 		} else {
 			Scanner sc = new java.util.Scanner(System.in);

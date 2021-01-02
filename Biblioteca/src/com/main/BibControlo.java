@@ -1,5 +1,9 @@
 package com.main;
 
+import static Helpers.AsymmetricKey.*;
+import static Helpers.SymmetricKey.*;
+import static Helpers.globalMethods.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.security.cert.CertificateException;
@@ -12,9 +16,6 @@ import AppInfo.ApplicationInfo;
 import Helpers.WriteToFile;
 import SystemInfo.SystemInfo;
 import UserInf.UserInfo;
-import static globalMethods.globalMethods.*;
-import static globalMethods.SymmetricKey.*;
-import static globalMethods.AsymmetricKey.*;
 
 public class BibControlo {
 	private Licenca license;
@@ -53,16 +54,24 @@ public class BibControlo {
 	 * @throws ParseException
 	 * @throws JSONException
 	 */
-	public boolean verificaSeLicencaExiste() throws IOException, CertificateException, ParseException, JSONException {
+	public boolean verificaSeLicencaExiste() throws IOException, CertificateException, ParseException, JSONException, SecurityException {
 
 		// verifica se existe a pasta de licencas
 		File licenseDir = new File("licencas");
 
 		if (!licenseDir.exists())
 			licenseDir.mkdir(); //se não existir cria a pasta "licencas"
-
-		UserInfo currentUser = new UserInfo(); //vai buscar info do User do CC ligado + Certificado do User
-		String pathToUser = "licencas/" + currentUser.getName() + "/"; //cria string com path
+		UserInfo currentUser = null;
+		String pathToUser = "";
+		try {
+			currentUser = new UserInfo(); //vai buscar info do User do CC ligado + Certificado do User	
+			pathToUser = "licencas/" + currentUser.getName() + "/"; //cria string com path
+		}catch (Exception e) {
+			System.out.println("Não foi possivel aceder aos dados do CC");
+			return false;
+		}
+		
+		
 
 		File licenseFile = new File(pathToUser + "license"); //instancia um ficheiro com o path/licence
 		File encryptedLicenseFile = new File(pathToUser + "encryptedLicense"); //instancia um ficheiro para o caminho de licenca encriptada

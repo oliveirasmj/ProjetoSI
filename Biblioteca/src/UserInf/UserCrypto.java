@@ -26,8 +26,9 @@ import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static globalMethods.globalMethods.bytesToStringPrint;
-import static globalMethods.globalMethods.stringDecodeBase64;
+import static Helpers.globalMethods.bytesToStringPrint;
+import static Helpers.globalMethods.stringDecodeBase64;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Random;

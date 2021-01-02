@@ -11,10 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**
- *
- * @author diogo
- */
+
 public class CPUSerial {
     public final static String getCPUSerial() throws IOException {
         String os = System.getProperty("os.name");

@@ -5,12 +5,13 @@
  */
 package UserInf;
 
+import static Helpers.globalMethods.bytesEncodeBase64;
+
 import java.io.File;
 import java.security.cert.CertificateEncodingException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import static globalMethods.globalMethods.bytesEncodeBase64;
 
 public class UserInfo {
 
