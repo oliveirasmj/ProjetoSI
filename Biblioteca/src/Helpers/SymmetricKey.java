@@ -9,6 +9,8 @@ import java.io.FileOutputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
@@ -70,6 +72,6 @@ public class SymmetricKey {
         } catch (Exception ex) {
             Logger.getLogger(SymmetricKey.class.getName()).log(Level.SEVERE, null, ex);
             return null;
-        }
+        } 
     }
 }

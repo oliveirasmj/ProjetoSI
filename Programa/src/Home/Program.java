@@ -5,6 +5,7 @@ import java.security.cert.CertificateException;
 import java.text.ParseException;
 import java.util.Scanner;
 
+import javax.crypto.BadPaddingException;
 import javax.sound.midi.Soundbank;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,7 +18,7 @@ import UserInf.UserInfo;
 
 public class Program extends JFrame {
 
-	public static void main(String[] args) throws CertificateException, IOException, ParseException, JSONException {
+	public static void main(String[] args) throws CertificateException, IOException, ParseException, JSONException, SecurityException, BadPaddingException {
 
 		BibControlo cb = new BibControlo(); //instancia a biblioteca importada
 

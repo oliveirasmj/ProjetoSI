@@ -78,8 +78,8 @@ public class Main {
 	            JSONObject licenseInfo = licenseJSON.getJSONObject("licenseInfo");
 	            
 	             //chech cliente siganture
-	             byte[] clienteSignatureBytes = stringDecodeBase64(licenseJSON.getJSONObject("signature").getString("signature"));
-	             byte[] clienteCertificate = stringDecodeBase64(licenseInfo.getJSONObject("user").getString("certificate"));
+	            byte[] clienteSignatureBytes = stringDecodeBase64(licenseJSON.getJSONObject("signature").getString("signature"));
+	            byte[] clienteCertificate = stringDecodeBase64(licenseInfo.getJSONObject("user").getString("certificate"));
 	            Signature clientSignature = Signature.getInstance("SHA256withRSA");
 	            clientSignature.initVerify(getClientCertificate(clienteCertificate));        
 	            clientSignature.update(licenseInfo.toString().getBytes());

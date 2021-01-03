@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.text.ParseException;
 
+import javax.crypto.BadPaddingException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,7 +56,7 @@ public class BibControlo {
 	 * @throws ParseException
 	 * @throws JSONException
 	 */
-	public boolean verificaSeLicencaExiste() throws IOException, CertificateException, ParseException, JSONException, SecurityException {
+	public boolean verificaSeLicencaExiste() throws IOException, CertificateException, ParseException, JSONException, SecurityException, BadPaddingException {
 
 		// verifica se existe a pasta de licencas
 		File licenseDir = new File("licencas");
@@ -68,7 +70,7 @@ public class BibControlo {
 			pathToUser = "licencas/" + currentUser.getName() + "/"; //cria string com path
 		}catch (Exception e) {
 			System.out.println("Não foi possivel aceder aos dados do CC");
-			return false;
+			System.exit(0);
 		}
 		
 		
@@ -76,7 +78,6 @@ public class BibControlo {
 		File licenseFile = new File(pathToUser + "license"); //instancia um ficheiro com o path/licence
 		File encryptedLicenseFile = new File(pathToUser + "encryptedLicense"); //instancia um ficheiro para o caminho de licenca encriptada
 
-		
 		if (!licenseFile.exists() && !encryptedLicenseFile.exists()) { //senao existir licenca nem licenca encriptada
 			System.out.println("No license found!\ncreating a new license request");
 			return false;
@@ -88,9 +89,20 @@ public class BibControlo {
 				// decript file
 				byte[] SymmetricKey = readFromFile(pathToUser + "SymmetricKey");
 				byte[] encryptedLicense = readFromFile(pathToUser + "encryptedLicense");
-				byte[] decryptedLicense = decipher(SymmetricKey, encryptedLicense);
-				writeToFile(pathToUser + "license", decryptedLicense);
-				encryptedLicenseFile.delete();
+				try {
+					byte[] decryptedLicense = decipher(SymmetricKey, encryptedLicense);
+					writeToFile(pathToUser + "license", decryptedLicense);
+					encryptedLicenseFile.delete();
+				}catch(IOException e) {
+					System.out.println("Erro a desencriptar a licença.A chave simetrica utilizada para decifra não corresponde a chave utilizada para cifrar.");
+					System.exit(0);
+				}catch(Exception ex) {
+					System.out.println("Erro a desencriptar a licença.A chave simetrica utilizada para decifra não corresponde a chave utilizada para cifrar.");
+					System.exit(0);
+				}
+				
+				
+				
 				// TODO: assinar licença nova e verificar se esta se mantem // ou se calhar não
 			}
 
