@@ -20,11 +20,9 @@ public class Program extends JFrame {
 
 	public static void main(String[] args) throws CertificateException, IOException, ParseException, JSONException, SecurityException, BadPaddingException {
 
-		BibControlo cb = new BibControlo(); //instancia a biblioteca importada
+		BibControlo cb = new BibControlo(); 
 
 		if (cb.verificaSeLicencaExiste()) {
-			// tem ficheiro com licenca
-			// depois e validar
 			Program home = new Program();
 			home.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			home.setSize(500, 500);

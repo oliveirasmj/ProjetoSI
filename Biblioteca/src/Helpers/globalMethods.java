@@ -5,11 +5,18 @@
  */
 package Helpers;
 
+import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Random;
+
+import javax.crypto.spec.IvParameterSpec;
 
 
 public class globalMethods {
@@ -79,4 +86,6 @@ public class globalMethods {
     public static byte[] stringDecodeBase64(String base64String){
         return Base64.getDecoder().decode(base64String);
     }
+
+    
 }

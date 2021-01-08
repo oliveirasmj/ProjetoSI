@@ -42,76 +42,37 @@ public class Validador {
 	        this.password = password;
 	        this.name = name;
 	    }
-	    
-	    public void setPrivateKey() throws FileNotFoundException, IOException, NoSuchAlgorithmException, SignatureException, InvalidKeyException{
+	
+	    public void geraParDeChaves() throws FileNotFoundException, IOException, NoSuchAlgorithmException{
 	    	int keyLength = 2048;
 	    	
-	    	//SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-	    	
+
 	        KeyPairGenerator KPG = KeyPairGenerator.getInstance("RSA");
 	        
-	       // KPG.initialize(keyLength, random);
 
 	        KPG.initialize(keyLength);
 
 	        KeyPair keyPair = KPG.generateKeyPair();
-	    	
-	    	String privateKeyFilePath = "authorPrivKey";
+	        String privateKeyFilePath = "validadorPrivKey";
 	        
 	    	PrivateKey privateKey = keyPair.getPrivate();
 	        byte[] privateKeyBytes = privateKey.getEncoded();
 	        
 	        FileOutputStream os = new FileOutputStream(privateKeyFilePath);
 	        os.write(privateKeyBytes);
-	        os.close();
-	    }
-	    
-	 
-	    
-	    public void setPublicKey() throws FileNotFoundException, IOException, NoSuchAlgorithmException{
-	    	int keyLength = 2048;
-	    	
-	    	//SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-	    	
-	        KeyPairGenerator KPG = KeyPairGenerator.getInstance("RSA");
+	        os.close();	
 	        
-	        
-	       // KPG.initialize(keyLength, random);
-
-	        KPG.initialize(keyLength);
-
-	        KeyPair keyPair = KPG.generateKeyPair();
-	    	
-	    	String publicKeyFilePath = "authorPubKey";
+	    	String publicKeyFilePath = "validadorPubKey";
 
 	        PublicKey publicKey = keyPair.getPublic();
 	        byte[] publicKeyBytes = publicKey.getEncoded();
 
-	        FileOutputStream os = new FileOutputStream(publicKeyFilePath);
-	        os.write(publicKeyBytes);
-	        os.close();
+	        FileOutputStream oss = new FileOutputStream(publicKeyFilePath);
+	        oss.write(publicKeyBytes);
+	        oss.close();
 	    }
 	    
-	    public Signature getSignature(String key) throws NoSuchAlgorithmException, IOException, SignatureException, InvalidKeyException{
-	        Signature sign = Signature.getInstance("SHA256withRSA");
-	        sign.initSign(privateKey);
-
-	        InputStream in = null;
-	        try {
-	            in = new ByteArrayInputStream(key.getBytes());
-	            byte[] buf = new byte[2048];
-	            int len;
-	            while ((len = in.read(buf)) != -1) {
-	            sign.update(buf, 0, len);
-	            }
-	        } finally {
-	            if ( in != null ) in.close();
-	        }
-
-	        return sign;
-	    }
-
-
+	 
 	    public int getId() {
 	        return id;
 	    }

@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.text.ParseException;
+import java.util.Scanner;
 
 import javax.crypto.BadPaddingException;
 
@@ -21,9 +22,8 @@ import UserInf.UserInfo;
 
 public class BibControlo {
 	private Licenca license;
-//	private String pathToDirLicenca;
-
-	// private UserInfo currentUser;
+	
+	
 	public BibControlo() {
 	}
 
@@ -67,19 +67,19 @@ public class BibControlo {
 		String pathToUser = "";
 		try {
 			currentUser = new UserInfo(); //vai buscar info do User do CC ligado + Certificado do User	
-			pathToUser = "licencas/" + currentUser.getName() + "/"; //cria string com path
+			pathToUser = "licencas/" + currentUser.getNic() + "/"; //cria string com path
 		}catch (Exception e) {
 			System.out.println("Não foi possivel aceder aos dados do CC");
 			System.exit(0);
 		}
 		
+		String caminhoParaLicenca = pathToUser+"licenca/";
 		
 
-		File licenseFile = new File(pathToUser + "license"); //instancia um ficheiro com o path/licence
-		File encryptedLicenseFile = new File(pathToUser + "encryptedLicense"); //instancia um ficheiro para o caminho de licenca encriptada
+		File licenseFile = new File(caminhoParaLicenca + "license"); //instancia um ficheiro com o path/licence
+		File encryptedLicenseFile = new File(caminhoParaLicenca + "encryptedLicense"); //instancia um ficheiro para o caminho de licenca encriptada
 
 		if (!licenseFile.exists() && !encryptedLicenseFile.exists()) { //senao existir licenca nem licenca encriptada
-			System.out.println("No license found!\ncreating a new license request");
 			return false;
 		} else {
 		
@@ -88,25 +88,19 @@ public class BibControlo {
 				System.out.println("decrypting license file");
 				// decript file
 				byte[] SymmetricKey = readFromFile(pathToUser + "SymmetricKey");
-				byte[] encryptedLicense = readFromFile(pathToUser + "encryptedLicense");
+				byte[] encryptedLicense = readFromFile(caminhoParaLicenca + "encryptedLicense");
 				try {
-					byte[] decryptedLicense = decipher(SymmetricKey, encryptedLicense);
-					writeToFile(pathToUser + "license", decryptedLicense);
+					byte[] decryptedLicense = decipher(SymmetricKey, encryptedLicense,caminhoParaLicenca+"iv" );
+					writeToFile(caminhoParaLicenca + "license", decryptedLicense);
 					encryptedLicenseFile.delete();
-				}catch(IOException e) {
-					System.out.println("Erro a desencriptar a licença.A chave simetrica utilizada para decifra não corresponde a chave utilizada para cifrar.");
-					System.exit(0);
 				}catch(Exception ex) {
 					System.out.println("Erro a desencriptar a licença.A chave simetrica utilizada para decifra não corresponde a chave utilizada para cifrar.");
 					System.exit(0);
 				}
 				
-				
-				
-				// TODO: assinar licença nova e verificar se esta se mantem // ou se calhar não
 			}
 
-			byte[] licenseBytes = readFromFile(pathToUser + "license");
+			byte[] licenseBytes = readFromFile(caminhoParaLicenca + "license");
 			String licenseString = bytesToStringPrint(licenseBytes);
 
 			Licenca license = new Licenca();
@@ -126,7 +120,6 @@ public class BibControlo {
 		Licenca license = new Licenca();
 
 		try {
-			// String pathToJar = System.getProperty("user.dir") + "/BibliotecaJar.jar";
 			String pathToJar = System.getProperty("user.dir") + "/ProgramJar.jar";
 
 			license = new Licenca();

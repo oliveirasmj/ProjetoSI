@@ -9,6 +9,7 @@ import static Helpers.globalMethods.bytesEncodeBase64;
 
 import java.io.File;
 import java.security.cert.CertificateEncodingException;
+import java.util.Arrays;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,11 +20,20 @@ public class UserInfo {
     public UserCrypto uc;
 
 
+    //chamanda em verifica se existe
     public UserInfo(){
         this.uc =  new UserCrypto();
         setInfoFromCertificate();
     }
     
+    //chamada para gerar licenca
+    public UserInfo(String email){
+    	this.email = email;
+        this.uc =  new UserCrypto();
+        setInfoFromCertificate();
+    }
+    
+    //chamada para ler licenca valida e construir user
     public UserInfo(String name, String email, String nic) {
         this.name = name;
         this.email = email;
@@ -60,9 +70,8 @@ public class UserInfo {
      */
     private void setInfoFromCertificate(){
         String[] s = uc.getPublicCertificate().toString().split(",");
-
-        this.setNic(s[1].split("=")[1]);
-        this.setName(s[2].split("=")[1] + " " + s[3].split("=")[1]);
+        this.setNic(s[1].split("=BI")[1]);
+        this.setName(s[0].split("=")[1]);
         s = null;
     }
     
@@ -76,19 +85,17 @@ public class UserInfo {
     	
     	 byte[] certificate = uc.getPublicCertificate().getEncoded();
     	 
-         String path = "licencas/" + this.name + "/temp/";
+       /* String path = "licencas/" + this.nic + "/temp/";
          File dir = new File(path);
          if(!dir.exists())
-             dir.mkdir();
+             dir.mkdir(); */
          
-
+         
          //verificar o certificado do utilizador
          if(uc.verificarCertificado(certificate))
         	 UserObj.put("certificate", bytesEncodeBase64(certificate));
 
-         
-        
-    	
+
     	return UserObj;
     }
   

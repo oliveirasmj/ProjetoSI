@@ -5,9 +5,15 @@
  */
 package Helpers;
 
+import static Helpers.globalMethods.readFromFile;
+
+import java.io.IOException;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.cert.CertificateException;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.logging.Level;
@@ -59,6 +65,15 @@ public class AsymmetricKey {
             return null;
         }
     }
+    
+    
+	public static PublicKey getAuthorPublicKey() throws CertificateException, InvalidKeySpecException, NoSuchAlgorithmException, IOException {
+		// chave publica de autor guardada na raiz da pasta biblioteca
+		byte[] authorPubKeyBytes = readFromFile("validadorPubKey");
+		X509EncodedKeySpec ks = new X509EncodedKeySpec(authorPubKeyBytes);
+		KeyFactory kf = KeyFactory.getInstance("RSA");
+		return kf.generatePublic(ks);
+	}
     
     
 }

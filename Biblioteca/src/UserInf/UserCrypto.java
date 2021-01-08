@@ -60,6 +60,7 @@ public class UserCrypto {
     
     /**
      * function used to get the signature byes of a data
+     * CODIGO DE ASSINATURA / AUTENTICACAO
      * @param array de bytes a serem assinados
      * @return Array de bytes
      * @throws KeyStoreException
@@ -167,93 +168,8 @@ public class UserCrypto {
     }
     
     
-    public static void main(String[] args) {
-        try {
-            System.out.println("---A gerar ficheiros");
-            String texto = "isto é um texto e tal";
-            writeToFile("texto", texto.getBytes());
-            
-            
-            UserCrypto uc =  new UserCrypto();
-            
-            writeToFile("AssinaturaFicheiro", uc.getSignatureOfData(texto.getBytes()));
-            
-            Certificate cer = uc.getPublicCertificate();
-            writeToFile("certificadoChavePublica", cer.getEncoded());
-            
-            PublicKey pk = uc.getPublicKey(cer);
-            writeToFile("chavePublica", pk.getEncoded());
-            
-            System.out.println("Gerado com sucesso");
-            
-            
-            
-            
-            
-            
-            System.out.println("---A validar ficheiros");
-            
-            //certificate
-            CertificateFactory fact = CertificateFactory.getInstance("X.509");
-            FileInputStream is = new FileInputStream ("src/testes/certificadoChavePublica");
-            X509Certificate certificado = (X509Certificate) fact.generateCertificate(is);
-            verificarCertificado(certificado);
-            
-            
-            //signature
-            byte[] mysignatureread = readFromFile("AssinaturaFicheiro");
-            Signature mysignature = Signature.getInstance("SHA256withRSA");
-            mysignature.initVerify(certificado);
-            
-            
-            //data
-            byte[] data = readFromFile("texto");
-            mysignature.update(data);
-            
-            boolean verifies = mysignature.verify(mysignatureread);
-            
-            System.out.println("signature verifies: " + verifies);
-            System.out.println("data : " + bytesToStringPrint(data));
-            
-        } catch (Exception ex) {
-            Logger.getLogger(UserCrypto.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     
-    
-    public static void writeToFile(String nomeFicheiro, byte[] conteudo){
-        try {
-            FileOutputStream fos = new FileOutputStream("src/testes/"+nomeFicheiro);
-            fos.write(conteudo);
-            fos.close();
-        } catch (Exception e) {
-            System.out.println("erro a escrever ficheiro: " + e);
-        }
-        
-    }
-    
-    public static byte[] readFromFile(String fileName){
-        try{
-            FileInputStream fis = new FileInputStream("src/testes/"+fileName);
-            byte[] fileBytes = new byte[fis.available()];
-            fis.read(fileBytes);
-            return fileBytes;
-        } catch (Exception e) {
-            System.out.println("erro a ler ficheiro: " + e);
-        }
-        return null;
-        
-    }
-    
-    public static void verificarCertificado(X509Certificate cer){
-        try {
-            //cer.checkValidity(new Date(1990, 1, 1)); //data que permite fazer com que o certificado fique inválido
-            cer.checkValidity();
-            System.out.println("certificado valido");
-        } catch (Exception e) {
-            System.out.println("certificado inválido");
-        }
-    }
+  
     
     
     
