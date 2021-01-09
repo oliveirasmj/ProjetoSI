@@ -41,7 +41,7 @@ public class Licenca {
 	public Licenca() {
 	}
 
-	public boolean geraNovaLicenca(String dirParaJar, double appVersion) throws IOException {
+	public boolean geraNovaLicenca(String dirParaJar, double appVersion, byte[] appPubKey) throws IOException {
 		try {
 			Scanner sc = new Scanner(System.in);
 			System.out.println("Introduza o email do utilizador:");
@@ -49,8 +49,10 @@ public class Licenca {
 			
 			system = new SystemInfo();
 			user = new UserInfo(email);
-		
-			app = new ApplicationInfo(dirParaJar, appVersion, "SHA-256");
+	
+			String stringAppPubKey = bytesEncodeBase64(appPubKey);
+			
+			app = new ApplicationInfo(dirParaJar, appVersion, "SHA-256",stringAppPubKey );
 
 
 			// Junta todos os jsons
@@ -84,7 +86,7 @@ public class Licenca {
 			// a assintura é um hash da licenca encriptado com a chave privada para comprovar que a licenca nao foi alterada
 			byte[] licenseSignatureBytes = user.uc.getSignatureOfData(licenseBytes);
 			// cria ficheiro com nome do utilziador - signatura assinatura
-			writeToFile(root + user.getName() + " - signature", licenseSignatureBytes);
+		//	writeToFile(root + user.getName() + " - signature", licenseSignatureBytes);
 
 			// cria um objeto json com a assinatura
 			JSONObject signature = new JSONObject();
@@ -94,13 +96,13 @@ public class Licenca {
 			JSONObject license = new JSONObject();
 			license.put("licenseInfo", licenseInfo);
 			license.put("signature", signature);
-			writeToFile(root + user.getName() + " - licenca", license.toString().getBytes());
+		//	writeToFile(root + user.getName() + " - licenca", license.toString().getBytes());
 			
 
 			// gera chave simetrica
 			byte[] key = generateKey();
 			// guarda no ficheiro symmetrickey a chave simetrica
-			writeToFile(root + "SymmetricKey", key);
+		//	writeToFile(root + "SymmetricKey", key);
 			// cifra com a chave simetrica CBC
 			writeToFile(caminhoPastaAValidar + "cipheredLicenseRequest", cipher(key, license.toString().getBytes(),caminhoPastaAValidar + "iv"));
 
@@ -147,7 +149,7 @@ public class Licenca {
 
 		JSONObject app = licenseInfo.getJSONObject("app");
 
-		this.app = new ApplicationInfo(app.getString("appName"), app.getString("hash"), app.getDouble("version"));
+		this.app = new ApplicationInfo(app.getString("appName"), app.getString("hash"), app.getDouble("version"), app.getString("appPubKey"));
 		//obtem assinatura de autor atraves de json
 		this.authorSignatureBytes = stringDecodeBase64(jsonLicense.getJSONObject("signature").getString("signature"));
 

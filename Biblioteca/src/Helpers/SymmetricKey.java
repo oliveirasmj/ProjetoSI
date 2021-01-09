@@ -25,7 +25,10 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 
@@ -39,7 +42,7 @@ public class SymmetricKey {
      */
     public static byte[] generateKey() {
         try {
-            KeyGenerator kg = KeyGenerator.getInstance("DES");
+            KeyGenerator kg = KeyGenerator.getInstance("AES");
             SecretKey sk = kg.generateKey();
             return sk.getEncoded();
             
@@ -63,10 +66,10 @@ public class SymmetricKey {
          byte[] iV = null;
           
         try {
-            SecretKey sk = new SecretKeySpec(secretKey,"DES");
+            SecretKey sk = new SecretKeySpec(secretKey,"AES");
             
                  
-            Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             
          
             cipher.init(Cipher.ENCRYPT_MODE, sk);
@@ -98,9 +101,9 @@ public class SymmetricKey {
     	 byte[] iV = null;
     	
         try {
-            SecretKey sk = new SecretKeySpec(secretKey,"DES");
+            SecretKey sk = new SecretKeySpec(secretKey,"AES");
             
-            Cipher c = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
             
             iV = readFromFile(pathToIV);
             
@@ -112,4 +115,8 @@ public class SymmetricKey {
             return null;
         } 
     }
+    
+    
+    
+ 
 }

@@ -23,6 +23,7 @@ public class globalMethods {
             FileInputStream fis = new FileInputStream(fileName);
             byte[] fileBytes = new byte[fis.available()];
             fis.read(fileBytes);
+            fis.close();
             return fileBytes;
         } catch (Exception e) {
             System.out.println("erro a ler ficheiro: " + e);

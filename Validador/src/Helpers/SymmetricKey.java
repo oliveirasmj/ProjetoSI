@@ -39,7 +39,7 @@ public class SymmetricKey {
      */
     public static byte[] generateKey() {
         try {
-            KeyGenerator kg = KeyGenerator.getInstance("DES");
+            KeyGenerator kg = KeyGenerator.getInstance("AES");
             SecretKey sk = kg.generateKey();
             return sk.getEncoded();
             
@@ -62,10 +62,10 @@ public class SymmetricKey {
          byte[] iV = null;
           
         try {
-            SecretKey sk = new SecretKeySpec(secretKey,"DES");
+            SecretKey sk = new SecretKeySpec(secretKey,"AES");
             
                  
-            Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             
          
             cipher.init(Cipher.ENCRYPT_MODE, sk);
@@ -97,9 +97,9 @@ public class SymmetricKey {
     	 byte[] iV = null;
     	
         try {
-            SecretKey sk = new SecretKeySpec(secretKey,"DES");
+            SecretKey sk = new SecretKeySpec(secretKey,"AES");
             
-            Cipher c = Cipher.getInstance("DES/CBC/PKCS5Padding");
+            Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
             
             iV = readFromFile(pathToIV+"/iv");
             

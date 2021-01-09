@@ -10,18 +10,22 @@ import java.security.MessageDigest;
 import org.json.*;
 
 import Helpers.globalMethods;
+import static Helpers.globalMethods.*;
 
 
 public class ApplicationInfo {
     private String appName;
     private double version;
     private String hash;
+    private String appPubKey;
 
-    public ApplicationInfo(String FileName, double version, String algorithm) {
+ 
+    public ApplicationInfo(String FileName, double version, String algorithm,String pubKey) {
         String[] getAppName = FileName.split("/");
         this.appName = getAppName[getAppName.length-1];
         this.version = version;
         this.hash = generateHash(FileName,algorithm);
+        this.appPubKey =  pubKey;
     }
     
     /**
@@ -30,10 +34,11 @@ public class ApplicationInfo {
      * @param hash
      * @param version 
      */
-    public ApplicationInfo(String appName, String hash,double version) {
+    public ApplicationInfo(String appName, String hash,double version,String pubKey) {
         this.appName = appName;
         this.version = version;
         this.hash = hash;
+        this.appPubKey = pubKey ;
     }
     
     
@@ -68,17 +73,21 @@ public class ApplicationInfo {
         obj.put("appName", this.appName);
         obj.put("version", this.version);
         obj.put("hash", this.hash);
+        obj.put("appPubKey", this.appPubKey);
         
         return obj;
     }
     
     
-    @Override
-    public String toString() {
-        return "Application{" + "appName=" + appName + ", version=" + version + ", Hash=" + hash + '}';
-    }
+ 
     
-    /**
+    @Override
+	public String toString() {
+		return "ApplicationInfo [appName=" + appName + ", version=" + version + ", hash=" + hash + ", appPubKey="
+				+ appPubKey + "]";
+	}
+
+	/**
      * function used to generate the hash of the application
      * @param filename name of the file to hash
      * @param algorithm algorithm used to hash
@@ -117,25 +126,6 @@ public class ApplicationInfo {
     return stringBuffer.toString();
 }
     
-    public static void main(String[] args) throws JSONException {
-        String path = System.getProperty("user.dir");
-        String file = "/src/testes/texto";
-        String file2 = "/src/UserInfo/User.java";
 
-        System.out.println(path + file);
-        System.out.println(path + file2);
-
-        ApplicationInfo app = new ApplicationInfo((path+file), 0, "teste");
-        System.out.println("app : " + app);
-        
-        ApplicationInfo app2 = new ApplicationInfo((path+file2), 0,"SHA-256");
-        System.out.println("app2 : " + app2);
-
-        
-        JSONObject test = app2.toJSON();
-        System.out.println("json : " + test.toString());
-        
-
-    }
     
 }

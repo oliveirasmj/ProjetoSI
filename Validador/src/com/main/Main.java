@@ -1,7 +1,6 @@
 package com.main;
 
 import static Helpers.globalMethods.*;
-import static Helpers.globalMethods.readFromFile;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,23 +48,26 @@ public class Main {
 	Validador admin;
 	byte[] requestKey;
 
-	public static void main(String[] args) throws InvalidKeyException, FileNotFoundException, NoSuchAlgorithmException,
-			SignatureException, IOException {
+	public static void main(String[] args) throws Exception {
 
 		String rootPubKey = "validadorPubKey";
 		File pubKey = new File(rootPubKey);
 
 		String rootPrivKey = "validadorPrivKey";
-		File privKey = new File(rootPrivKey);
+		File privKeyEncrypted = new File(rootPrivKey+"encrypted");
 
-		System.out.println(!pubKey.exists() + " + " + !privKey.exists());
+		
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Introduza a sua palavra pass ! ");
+		String password = sc.nextLine();
 
-		if (!pubKey.exists() || !privKey.exists()) {
-			Validador vl = new Validador("Hp", "0000", "Hugo");
+		if (!pubKey.exists() || !privKeyEncrypted.exists()) {
+			
+			Validador vl = new Validador("Hp", password, "Hugo");
 			vl.geraParDeChaves();
 		} else {
 			System.out.println("Introduza o numero do BI para gerar uma licenca.");
-			Scanner sc = new Scanner(System.in);
+			
 			String nBI = sc.nextLine();
 
 			String rootParaDirBI = "pedido=" + nBI;
@@ -76,12 +78,18 @@ public class Main {
 				System.exit(0);
 			} else {
 				try {
-
+					   String privateKeyFilePath = "validadorPrivKey";
+					
+					
+					//DEcifra assimetrica - para obter chave
 					byte[] symmetricKeyBytes = readFromFile(rootParaDirBI+"/cipheredKeyRequest");
-					byte[] authorPrivateKeyBytes = readFromFile("validadorPrivKey");
-
+					
+					byte[] authorPrivateKeyBytes = decryptAppPairKey(privateKeyFilePath+"encrypted", privateKeyFilePath, password, privateKeyFilePath);
+					
+					//byte[] authorPrivateKeyBytes = readFromFile("validadorPrivKey");
 					byte[] key = asymmetricDecipher(authorPrivateKeyBytes, symmetricKeyBytes);
 
+					//decifra simetrica
 					byte[] encryptedLicenseByte = readFromFile(rootParaDirBI+"/cipheredLicenseRequest");
 					byte[] licenseBytes = decipher(key, encryptedLicenseByte,rootParaDirBI);
 					System.out.println("generated license file");
@@ -90,13 +98,14 @@ public class Main {
 					JSONObject licenseInfo = licenseJSON.getJSONObject("licenseInfo");
 
 					// chech cliente siganture
-					byte[] clienteSignatureBytes = stringDecodeBase64(
-							licenseJSON.getJSONObject("signature").getString("signature"));
-					byte[] clienteCertificate = stringDecodeBase64(
-							licenseInfo.getJSONObject("user").getString("certificate"));
+					byte[] clienteSignatureBytes = stringDecodeBase64(licenseJSON.getJSONObject("signature").getString("signature"));
+					byte[] clienteCertificate = stringDecodeBase64( licenseInfo.getJSONObject("user").getString("certificate"));
+					byte[] appPubKey = stringDecodeBase64( licenseInfo.getJSONObject("app").getString("appPubKey"));
+					
 					Signature clientSignature = Signature.getInstance("SHA256withRSA");
 					clientSignature.initVerify(getClientCertificate(clienteCertificate));
 					clientSignature.update(licenseInfo.toString().getBytes());
+					
 					if (!clientSignature.verify(clienteSignatureBytes)) {
 						System.out.println("not valid license");
 						System.exit(1);
@@ -135,9 +144,21 @@ public class Main {
 						pastaLicenca.mkdir();
 					
 					
-					byte[] ciphered = cipher(key, licenseJSON.toString().getBytes(), rootParaLicenca+"iv");
+				/*	byte[] ciphered = cipher(key, licenseJSON.toString().getBytes(), rootParaLicenca+"iv");
 					
-					writeToFile(rootParaLicenca+"encryptedLicense", ciphered);
+					writeToFile(rootParaLicenca+"encryptedLicense", ciphered);*/
+					
+					//Gerar chave simetrica para validar LICENCA
+					byte[] novaChaveSimetrica = generateKey();
+					
+					
+					//Encriptar licenca com nova simetrica
+					writeToFile(rootParaLicenca+"encryptedLicense", cipher(novaChaveSimetrica, licenseJSON.toString().getBytes(),rootParaLicenca + "iv"));
+
+					
+					// encriptar simetrica com chave pucblica da app
+					byte[] appPublicKey = getAppPubKey(appPubKey).getEncoded();
+					writeToFile(rootParaLicenca+"NovaChaveSimetricaEncrypted", asymmetricCipher(appPublicKey, novaChaveSimetrica));
 
 					File fileEncryptedLicense = new File("cipheredLicenseRequest");
 					File fileKey = new File("cipheredKeyRequest");

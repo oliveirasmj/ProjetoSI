@@ -23,25 +23,16 @@ import UserInf.UserInfo;
 public class BibControlo {
 	private Licenca license;
 	
+	private static byte[] appPrivKey;
+	private static byte[] appPubKey;
+	private static String pass;
 	
-	public BibControlo() {
+	public BibControlo(byte[] appPubKey, byte[] appPrivKey,String passDoPrograma) {
+		this.appPrivKey = appPrivKey;
+		this.appPubKey = appPubKey;
+		this.pass = passDoPrograma;
 	}
-
-	public static void main(String[] args) throws IOException, JSONException, CertificateException, ParseException {
-
-		// verifica se existe a pasta de licencas
-		File licenseDir = new File("licencas");
-		if (!licenseDir.exists())
-			licenseDir.mkdir();
-
-		// verifica se a licenca existe, senao cria
-
-		// UserInfo currentUser = new UserInfo();
-		// String pathToUser = "licencas/" +currentUser.getName() + "/";
-		// registarNovaLicenca();
-		// verificaSeLicencaExiste( );
-	}
-
+	
 	/**
 	 * Primeira funcao a ser chamada por programa princpial para verificar se nao
 	 * existe licenca. Se não existir pergunta se quer criar com a funcao
@@ -51,12 +42,9 @@ public class BibControlo {
 	 * 
 	 * @param pathToUser caminho do jar a criar o hash
 	 * @return boolean caso consiga criar a licenca ou se existir ou nao
-	 * @throws IOException
-	 * @throws CertificateException
-	 * @throws ParseException
-	 * @throws JSONException
+	 * @throws Exception 
 	 */
-	public boolean verificaSeLicencaExiste() throws IOException, CertificateException, ParseException, JSONException, SecurityException, BadPaddingException {
+	public boolean verificaSeLicencaExiste() throws Exception {
 
 		// verifica se existe a pasta de licencas
 		File licenseDir = new File("licencas");
@@ -87,10 +75,26 @@ public class BibControlo {
 			if (encryptedLicenseFile.exists()) {
 				System.out.println("decrypting license file");
 				// decript file
-				byte[] SymmetricKey = readFromFile(pathToUser + "SymmetricKey");
+				//byte[] SymmetricKey = readFromFile(pathToUser + "SymmetricKey");
+				
+				//obter nova chave simetrica
+				//DEcifra assimetrica - para obter chave
+				byte[] symmetricKeyBytes = readFromFile(caminhoParaLicenca+"NovaChaveSimetricaEncrypted");
+				
+			
+				//vem do construtor
+				String caminhoDirAppKey = "chavesAplicacao/";
+				String caminhoPrivKey = caminhoDirAppKey + "appPrivKeyencrypted";
+				byte[] appPrivateKeyBytes = decryptAppPairKey(caminhoPrivKey, caminhoDirAppKey+"privKeyDecifrada", pass, caminhoDirAppKey);
+				//byte[] appPrivateKeyBytes = readFromFile(caminhoPrivKey);
+				
+				
+				byte[] key = asymmetricDecipher(appPrivateKeyBytes, symmetricKeyBytes);
+				
+				
 				byte[] encryptedLicense = readFromFile(caminhoParaLicenca + "encryptedLicense");
 				try {
-					byte[] decryptedLicense = decipher(SymmetricKey, encryptedLicense,caminhoParaLicenca+"iv" );
+					byte[] decryptedLicense = decipher(key, encryptedLicense,caminhoParaLicenca+"iv" );
 					writeToFile(caminhoParaLicenca + "license", decryptedLicense);
 					encryptedLicenseFile.delete();
 				}catch(Exception ex) {
@@ -118,12 +122,12 @@ public class BibControlo {
 	 */
 	public boolean registarNovaLicenca() {
 		Licenca license = new Licenca();
-
+		
 		try {
 			String pathToJar = System.getProperty("user.dir") + "/ProgramJar.jar";
-
+	
 			license = new Licenca();
-			license.geraNovaLicenca(pathToJar, 0.0);
+			license.geraNovaLicenca(pathToJar, 0.0, appPubKey);
 
 			return true;
 		} catch (Exception e) {

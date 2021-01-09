@@ -1,7 +1,9 @@
 package Models;
 
 
+import static Helpers.AsymmetricKey.*;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,7 +45,7 @@ public class Validador {
 	        this.name = name;
 	    }
 	
-	    public void geraParDeChaves() throws FileNotFoundException, IOException, NoSuchAlgorithmException{
+	    public void geraParDeChaves() throws Exception{
 	    	int keyLength = 2048;
 	    	
 
@@ -58,9 +60,18 @@ public class Validador {
 	    	PrivateKey privateKey = keyPair.getPrivate();
 	        byte[] privateKeyBytes = privateKey.getEncoded();
 	        
-	        FileOutputStream os = new FileOutputStream(privateKeyFilePath);
+	      /*  FileOutputStream os = new FileOutputStream(privateKeyFilePath);
 	        os.write(privateKeyBytes);
-	        os.close();	
+	        os.close();	*/
+	        
+	        encryptyAppKeyPair(privateKeyBytes, privateKeyFilePath+"encrypted", password, privateKeyFilePath);
+	        
+	     /*   File delPrivKeyTemp = new File(privateKeyFilePath);
+	        delPrivKeyTemp.delete();*/
+	        
+	      /* FileOutputStream os = new FileOutputStream(privateKeyFilePath);
+	        os.write(privateKeyBytes);
+	        os.close();	*/
 	        
 	    	String publicKeyFilePath = "validadorPubKey";
 
