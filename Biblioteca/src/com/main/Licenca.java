@@ -41,16 +41,50 @@ public class Licenca {
 	public Licenca() {
 	}
 
-	public boolean geraNovaLicenca(String dirParaJar, double appVersion, byte[] appPubKey) throws IOException {
+	//public boolean geraNovaLicenca(String dirParaJar, double appVersion, byte[] appPubKey) throws IOException {
+	public boolean geraNovaLicenca(String dirParaJar, double appVersion, BibControlo bib) throws IOException {
 		try {
 			Scanner sc = new Scanner(System.in);
 			System.out.println("Introduza o email do utilizador:");
 			String email = sc.nextLine();
 			
-			system = new SystemInfo();
+			
 			user = new UserInfo(email);
-	
-			String stringAppPubKey = bytesEncodeBase64(appPubKey);
+			
+			//Cria pasta com CC user
+			String root = "licencas/" + user.getNic() + "/";
+			
+			String caminhoPastaAValidar = root + "pedido="+ user.getNic() + "/";
+			
+			String pathToUserAppPairKeys = root + "chavesAplicacao/";
+
+			// Cria pasta com nome do utilizador do cartao de cidadao caso não exista
+			File dir = new File(root);
+			if (!dir.exists())
+				dir.mkdir();
+			
+			// cria dir temp com dados de licenca caso nao exista
+			File dirAValidar = new File(caminhoPastaAValidar);
+				if (!dirAValidar.exists()) 
+					dirAValidar.mkdir();
+				
+				
+				
+				File dirParChavesUserApp = new File(pathToUserAppPairKeys);
+				if (!dirParChavesUserApp.exists()) 
+					dirParChavesUserApp.mkdir();
+						
+			
+			
+			system = new SystemInfo();
+			
+			
+			bib.verificaSeExisteParDeChavesDeUser(pathToUserAppPairKeys+"appPrivKey", pathToUserAppPairKeys+"appPubKey", pathToUserAppPairKeys);
+			
+			String stringAppPubKey = bytesEncodeBase64(bib.getAppPubKey());
+			
+			
+		//	String stringAppPubKey = bytesEncodeBase64(appPubKey);
 			
 			app = new ApplicationInfo(dirParaJar, appVersion, "SHA-256",stringAppPubKey );
 
@@ -61,21 +95,9 @@ public class Licenca {
 			licenseInfo.put("system", system.systemJSON());
 			licenseInfo.put("app", app.toJSON());
 
-			//Cria pasta com CC user
-			String root = "licencas/" + user.getNic() + "/";
-			
-			String caminhoPastaAValidar = "licencas/" + user.getNic() + "/pedido="+ user.getNic() + "/";
-
-			// Cria pasta com nome do utilizador do cartao de cidadao caso não exista
-			File dir = new File(root);
-			if (!dir.exists())
-				dir.mkdir();
+		
 			
 			
-			// cria dir temp com dados de licenca caso nao exista
-			File dirAValidar = new File(caminhoPastaAValidar);
-			if (!dirAValidar.exists()) 
-				dirAValidar.mkdir();
 			
 				
 
@@ -96,13 +118,16 @@ public class Licenca {
 			JSONObject license = new JSONObject();
 			license.put("licenseInfo", licenseInfo);
 			license.put("signature", signature);
-		//	writeToFile(root + user.getName() + " - licenca", license.toString().getBytes());
+			
+			
+		 //	writeToFile(root + user.getName() + " - licenca", license.toString().getBytes());
 			
 
 			// gera chave simetrica
 			byte[] key = generateKey();
 			// guarda no ficheiro symmetrickey a chave simetrica
 		//	writeToFile(root + "SymmetricKey", key);
+			
 			// cifra com a chave simetrica CBC
 			writeToFile(caminhoPastaAValidar + "cipheredLicenseRequest", cipher(key, license.toString().getBytes(),caminhoPastaAValidar + "iv"));
 
@@ -118,6 +143,7 @@ public class Licenca {
 			System.out.println("\n\nFicheiro criados");
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("error in generate new files : " + e.toString());
 			return false;
 		}

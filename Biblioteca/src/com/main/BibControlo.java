@@ -23,15 +23,74 @@ import UserInf.UserInfo;
 public class BibControlo {
 	private Licenca license;
 	
-	private static byte[] appPrivKey;
-	private static byte[] appPubKey;
+	private static byte[] appPrivKey = null;
+	private  byte[] appPubKey = null;
 	private static String pass;
 	
-	public BibControlo(byte[] appPubKey, byte[] appPrivKey,String passDoPrograma) {
+	/*public BibControlo(byte[] appPubKey, byte[] appPrivKey,String passDoPrograma) {
 		this.appPrivKey = appPrivKey;
 		this.appPubKey = appPubKey;
 		this.pass = passDoPrograma;
 	}
+	*/
+	
+	public BibControlo() {
+	
+	}
+	
+	
+	
+	public static byte[] getAppPrivKey() {
+		return appPrivKey;
+	}
+
+	public static void setAppPrivKey(byte[] appPrivKey) {
+		BibControlo.appPrivKey = appPrivKey;
+	}
+
+	public byte[] getAppPubKey() {
+		return appPubKey;
+	}
+
+	public  void setAppPubKey(byte[] appPubKey) {
+		this.appPubKey = appPubKey;
+	}
+
+	public static String getPass() {
+		return pass;
+	}
+
+	public static void setPass(String pass) {
+		BibControlo.pass = pass;
+	}
+
+	public void verificaSeExisteParDeChavesDeUser(String caminhoPrivKey, String caminhoPubKey,String rootUser) {
+		System.out.println("Introduza a palavra chave:");	
+		Scanner sc = new Scanner(System.in);
+		String pass = sc.nextLine();
+		
+		File fileAppPrivKey = new File(caminhoPrivKey + "encrypted");
+		File fileAppPubKey = new File(caminhoPubKey);
+		
+
+		if (!fileAppPrivKey.exists() || !fileAppPubKey.exists()) {
+			try {
+				geraParDeChaves(caminhoPrivKey, caminhoPubKey, pass,rootUser);
+				BibControlo.setAppPrivKey( decryptAppPairKey(caminhoPrivKey + "encrypted", caminhoPrivKey+"desencript", pass,rootUser));
+				this.setAppPubKey(readFromFile(caminhoPubKey));
+			} catch (Exception e) {
+				System.out.println("Não foi possivel gerar um par de chaves da aplicação." + e);
+			}
+		}else {
+			try {
+			BibControlo.setAppPrivKey( decryptAppPairKey(caminhoPrivKey + "encrypted", caminhoPrivKey+"desencript", pass,rootUser));
+			this.setAppPubKey(readFromFile(caminhoPubKey));
+			}catch(Exception e ) {
+				System.out.println("Não foi possivel aceder ao pares de chaves da sua aplicação." + e);
+			}
+		}
+	}
+	
 	
 	/**
 	 * Primeira funcao a ser chamada por programa princpial para verificar se nao
@@ -51,11 +110,22 @@ public class BibControlo {
 
 		if (!licenseDir.exists())
 			licenseDir.mkdir(); //se não existir cria a pasta "licencas"
+		
 		UserInfo currentUser = null;
 		String pathToUser = "";
+		String pathToUserAppPairKeys = null;
+		
 		try {
 			currentUser = new UserInfo(); //vai buscar info do User do CC ligado + Certificado do User	
 			pathToUser = "licencas/" + currentUser.getNic() + "/"; //cria string com path
+	
+			pathToUserAppPairKeys ="licencas/" + currentUser.getNic() + "/chavesAplicacao/";
+			File dirUserChavesApp = new File(pathToUserAppPairKeys); 
+			
+			if(dirUserChavesApp.exists()) {
+				verificaSeExisteParDeChavesDeUser(pathToUserAppPairKeys+"appPrivKey", pathToUserAppPairKeys+"appPubKey", pathToUserAppPairKeys);
+			}
+			
 		}catch (Exception e) {
 			System.out.println("Não foi possivel aceder aos dados do CC");
 			System.exit(0);
@@ -81,12 +151,13 @@ public class BibControlo {
 				//DEcifra assimetrica - para obter chave
 				byte[] symmetricKeyBytes = readFromFile(caminhoParaLicenca+"NovaChaveSimetricaEncrypted");
 				
-			
+				
 				//vem do construtor
-				String caminhoDirAppKey = "chavesAplicacao/";
+			/*	String caminhoDirAppKey = "chavesAplicacao/";
 				String caminhoPrivKey = caminhoDirAppKey + "appPrivKeyencrypted";
-				byte[] appPrivateKeyBytes = decryptAppPairKey(caminhoPrivKey, caminhoDirAppKey+"privKeyDecifrada", pass, caminhoDirAppKey);
-				//byte[] appPrivateKeyBytes = readFromFile(caminhoPrivKey);
+				byte[] appPrivateKeyBytes = decryptAppPairKey(caminhoPrivKey, caminhoDirAppKey+"privKeyDecifrada", pass, caminhoDirAppKey);*/
+				byte[] appPrivateKeyBytes = this.appPrivKey;
+			//	byte[] appPrivateKeyBytes = decryptAppPairKey(pathToUserAppPairKeys+"appPrivKeyencrypted", pathToUserAppPairKeys+"privKeyDecifrada", pass, pathToUserAppPairKeys);
 				
 				
 				byte[] key = asymmetricDecipher(appPrivateKeyBytes, symmetricKeyBytes);
@@ -127,8 +198,8 @@ public class BibControlo {
 			String pathToJar = System.getProperty("user.dir") + "/ProgramJar.jar";
 	
 			license = new Licenca();
-			license.geraNovaLicenca(pathToJar, 0.0, appPubKey);
-
+			//license.geraNovaLicenca(pathToJar, 0.0, appPubKey);
+			license.geraNovaLicenca(pathToJar, 0.0,this);
 			return true;
 		} catch (Exception e) {
 			return false;

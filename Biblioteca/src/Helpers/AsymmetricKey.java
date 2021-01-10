@@ -5,6 +5,8 @@
  */
 package Helpers;
 
+import static Helpers.AsymmetricKey.decryptAppPairKey;
+import static Helpers.AsymmetricKey.geraParDeChaves;
 import static Helpers.globalMethods.*;
 
 import java.io.File;
@@ -27,6 +29,7 @@ import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Cipher;
@@ -202,6 +205,10 @@ public class AsymmetricKey {
 			
 			return privKeyDesencriptada;
 		}
+		
+		
+		
+		
  
     
 }

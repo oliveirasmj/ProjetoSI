@@ -33,15 +33,14 @@ import UserInf.UserInfo;
 
 public class Program extends JFrame {
 
-	private  byte[] appPrivKey;
-	private  byte[] appPubKey;
+	
 
 	public static void main(String[] args) throws Exception {
 
 		
-		Program home = null;
 
-		String caminhoDirAppKey = "chavesAplicacao/";
+
+	/*	String caminhoDirAppKey = "chavesAplicacao/";
 		File dirChaves = new File(caminhoDirAppKey);
 		if (!dirChaves.exists())
 			dirChaves.mkdir();
@@ -56,7 +55,7 @@ public class Program extends JFrame {
 
 		String pass = sc.nextLine();
 
-		if (!fileAppPrivKey.exists() || !fileAppPubKey.exists()) {
+	   if (!fileAppPrivKey.exists() || !fileAppPubKey.exists()) {
 			try {
 				geraParDeChaves(caminhoPrivKey, caminhoPubKey, pass,caminhoDirAppKey);
 				home = new Program(decryptAppPairKey(caminhoPrivKey + "encrypted", caminhoPrivKey+"desencript", pass,caminhoDirAppKey), readFromFile(caminhoPubKey));
@@ -73,11 +72,13 @@ public class Program extends JFrame {
 		}else {
 			System.out.println("Erro ao construir o programa ou a biblioteca");
 			System.exit(0);
-		}
+		}*/
 		
+		
+		BibControlo cb = new BibControlo();
 
 		if (cb.verificaSeLicencaExiste()) {
-			// Program home = new Program();
+			Program home = new Program();
 			home.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			home.setSize(500, 500);
 			home.setVisible(true);
@@ -88,7 +89,7 @@ public class Program extends JFrame {
 			lblText.setBounds(250, 250, 300, 300);
 			home.add(lblText);
 		} else {
-		
+			Scanner sc = new Scanner(System.in);
 			System.out.println("Não foi encontrada nenhuma licenaça válida deseja criar uma? ");
 			System.out.println("Se sim prima 1. Caso deseje terminar a execução prima 0");
 			int opcao = sc.nextInt();
@@ -105,25 +106,6 @@ public class Program extends JFrame {
 		}
 	}
 
-	public byte[] getAppPrivKey() {
-		return appPrivKey;
-	}
 
-	public void setAppPrivKey(byte[] appPrivKey) {
-		this.appPrivKey = appPrivKey;
-	}
-
-	public byte[] getAppPubKey() {
-		return appPubKey;
-	}
-
-	public void setAppPubKey(byte[] appPubKey) {
-		this.appPubKey = appPubKey;
-	}
-
-	public Program(byte[] privKey, byte[] pubKey) {
-		this.appPrivKey = privKey;
-		this.appPubKey = pubKey;
-	}
 
 }
