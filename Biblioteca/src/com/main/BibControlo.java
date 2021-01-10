@@ -27,12 +27,6 @@ public class BibControlo {
 	private  byte[] appPubKey = null;
 	private static String pass;
 	
-	/*public BibControlo(byte[] appPubKey, byte[] appPrivKey,String passDoPrograma) {
-		this.appPrivKey = appPrivKey;
-		this.appPubKey = appPubKey;
-		this.pass = passDoPrograma;
-	}
-	*/
 	
 	public BibControlo() {
 	
@@ -145,20 +139,15 @@ public class BibControlo {
 			if (encryptedLicenseFile.exists()) {
 				System.out.println("decrypting license file");
 				// decript file
-				//byte[] SymmetricKey = readFromFile(pathToUser + "SymmetricKey");
+			
 				
 				//obter nova chave simetrica
 				//DEcifra assimetrica - para obter chave
 				byte[] symmetricKeyBytes = readFromFile(caminhoParaLicenca+"NovaChaveSimetricaEncrypted");
 				
-				
-				//vem do construtor
-			/*	String caminhoDirAppKey = "chavesAplicacao/";
-				String caminhoPrivKey = caminhoDirAppKey + "appPrivKeyencrypted";
-				byte[] appPrivateKeyBytes = decryptAppPairKey(caminhoPrivKey, caminhoDirAppKey+"privKeyDecifrada", pass, caminhoDirAppKey);*/
+
 				byte[] appPrivateKeyBytes = this.appPrivKey;
-			//	byte[] appPrivateKeyBytes = decryptAppPairKey(pathToUserAppPairKeys+"appPrivKeyencrypted", pathToUserAppPairKeys+"privKeyDecifrada", pass, pathToUserAppPairKeys);
-				
+		
 				
 				byte[] key = asymmetricDecipher(appPrivateKeyBytes, symmetricKeyBytes);
 				
@@ -198,7 +187,6 @@ public class BibControlo {
 			String pathToJar = System.getProperty("user.dir") + "/ProgramJar.jar";
 	
 			license = new Licenca();
-			//license.geraNovaLicenca(pathToJar, 0.0, appPubKey);
 			license.geraNovaLicenca(pathToJar, 0.0,this);
 			return true;
 		} catch (Exception e) {

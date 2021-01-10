@@ -26,12 +26,38 @@ public class SystemInfo {
 		this.cpuSerial = CPUSerial.getCPUSerial();
 	}
 	
-    public SystemInfo(String macAdress, String motherboardserial, String username, String hostname, String cpuserial) {
-        this.macAdress = macAdress;
-        this.motherBoardSerial = motherboardserial;
-        this.userName = username;
-        this.hostName = hostname;
-        this.cpuSerial = cpuserial;
+    public SystemInfo(String macAdress, String motherboardserial, String jsonUserName, String jsonHostName, String jsonCpuSerial) throws IOException {
+    	
+    	boolean systemInfoIntegra = true;
+    	
+    	if(!macAdress.equals(getMac())) 
+    		systemInfoIntegra=false;
+    	
+    	
+    	if(!motherboardserial.equals(MotherboardSerial.getSystemMotherBoard_SerialNumber())) 
+    		systemInfoIntegra=false;
+    	
+    
+    	if(!jsonUserName.equals(System.getProperty("user.name"))) 
+    		systemInfoIntegra=false;
+    	
+    	if(!jsonHostName.equals(getSystemName())) 
+    		systemInfoIntegra=false;
+    	
+    	if(!jsonCpuSerial.equals(CPUSerial.getCPUSerial())) 
+    		systemInfoIntegra=false;
+    	
+    	
+    		if(systemInfoIntegra) {
+    			this.macAdress = macAdress;
+    			this.motherBoardSerial = motherboardserial;
+    	        this.userName = jsonUserName;
+    	        this.hostName = jsonHostName;
+    	        this.cpuSerial = jsonCpuSerial;
+    		}else {
+    			System.out.println("Os dados da licenca não corresponderem ao computador atual");
+    		}
+    		
     }
 
 	/**

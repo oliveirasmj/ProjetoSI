@@ -37,44 +37,6 @@ public class Program extends JFrame {
 
 	public static void main(String[] args) throws Exception {
 
-		
-
-
-	/*	String caminhoDirAppKey = "chavesAplicacao/";
-		File dirChaves = new File(caminhoDirAppKey);
-		if (!dirChaves.exists())
-			dirChaves.mkdir();
-
-		String caminhoPrivKey = caminhoDirAppKey + "appPrivKey";
-		String caminhoPubKey = caminhoDirAppKey + "appPubKey";
-		File fileAppPrivKey = new File(caminhoPrivKey + "encrypted");
-		File fileAppPubKey = new File(caminhoPubKey);
-
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Introduza a palavra chave:");
-
-		String pass = sc.nextLine();
-
-	   if (!fileAppPrivKey.exists() || !fileAppPubKey.exists()) {
-			try {
-				geraParDeChaves(caminhoPrivKey, caminhoPubKey, pass,caminhoDirAppKey);
-				home = new Program(decryptAppPairKey(caminhoPrivKey + "encrypted", caminhoPrivKey+"desencript", pass,caminhoDirAppKey), readFromFile(caminhoPubKey));
-			} catch (Exception e) {
-				System.out.println("Não foi possivel gerar um par de chaves da aplicação." + e);
-			}
-		} else {
-			home = new Program(decryptAppPairKey(caminhoPrivKey + "encrypted", caminhoPrivKey+"desencript", pass, caminhoDirAppKey), readFromFile(caminhoPubKey));
-		}
-		
-		BibControlo cb = null;
-		if(home != null) {
-			 cb = new BibControlo(home.getAppPubKey(),home.getAppPrivKey(),pass);
-		}else {
-			System.out.println("Erro ao construir o programa ou a biblioteca");
-			System.exit(0);
-		}*/
-		
-		
 		BibControlo cb = new BibControlo();
 
 		if (cb.verificaSeLicencaExiste()) {
@@ -85,7 +47,7 @@ public class Program extends JFrame {
 			home.setTitle("Home");
 			home.setLocationRelativeTo(null);
 
-			JLabel lblText = new JLabel("Este programa parece seguro");
+			JLabel lblText = new JLabel("Este programa está seguro, só pode aceder com uma licença válida.");
 			lblText.setBounds(250, 250, 300, 300);
 			home.add(lblText);
 		} else {

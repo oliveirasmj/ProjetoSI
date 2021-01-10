@@ -133,10 +133,9 @@ public class UserCrypto {
     public boolean VerifyUserByCC(Certificate licenseCertificate) throws NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException, InvalidKeyException, SignatureException{
         
         byte[] randomBytes = new byte[20];
-        //SecureRandom.getInstanceStrong().nextBytes(randomBytes);
-        new Random().nextBytes(randomBytes);
-        //System.out.println("random bytes : " + bytesToStringPrint(randomBytes));
 
+        new Random().nextBytes(randomBytes);
+       
         byte[] userSignatureBytes = getSignatureOfData(randomBytes);
         Signature userSignature = Signature.getInstance("SHA256withRSA");
         
@@ -159,13 +158,19 @@ public class UserCrypto {
             X509Certificate cert = (X509Certificate) fact.generateCertificate(is);
             //verifica se certificado obtido atraves dos bytes do json lido é valido
             cert.checkValidity();
-            System.out.println("certificado valido");
+            System.out.println("Certificado valido");
             return true;
         } catch (Exception e) {
-            System.out.println("certificado inválido");
+            System.out.println("Certificado inválido");
             return false;
         }
     }
+    
+    public static X509Certificate getClientCertificate(byte[] certificateBytes) throws CertificateException {
+		InputStream is = new ByteArrayInputStream(certificateBytes);
+		CertificateFactory fact = CertificateFactory.getInstance("X.509");
+		return (X509Certificate) fact.generateCertificate(is);
+	}
     
     
     

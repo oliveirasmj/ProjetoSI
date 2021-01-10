@@ -5,12 +5,24 @@ import static Helpers.AsymmetricKey.asymmetricCipher;
 import static Helpers.SymmetricKey.cipher;
 import static Helpers.SymmetricKey.generateKey;
 import static Helpers.globalMethods.bytesEncodeBase64;
+import static Helpers.globalMethods.readFromFile;
 import static Helpers.globalMethods.stringDecodeBase64;
 import static Helpers.globalMethods.writeToFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,6 +33,7 @@ import org.json.JSONObject;
 
 import AppInfo.ApplicationInfo;
 import SystemInfo.SystemInfo;
+import UserInf.UserCrypto;
 import UserInf.UserInfo;
 
 public class Licenca {
@@ -33,9 +46,10 @@ public class Licenca {
 	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private Date startDate;
 	private Date endDate;
+	private Date currentDate;
 
 	// private siganture
-	private byte[] authorSignatureBytes;
+	private byte[] validadorSignatureBytes;
 	private JSONObject licenseInfo; // use for cheking author siganture
 
 	public Licenca() {
@@ -158,7 +172,7 @@ public class Licenca {
 	
 	
 	public void readLicenseFromJsonString(String licenseString)
-			throws CertificateException, ParseException, JSONException {
+			throws CertificateException, ParseException, JSONException, IOException, UnrecoverableKeyException, InvalidKeyException, NoSuchAlgorithmException, KeyStoreException, SignatureException, InvalidKeySpecException {
 		// le json da licenca
 		JSONObject jsonLicense = new JSONObject(licenseString);
 
@@ -166,28 +180,69 @@ public class Licenca {
 		// cria objeto user atraves da licenca
 		JSONObject user = licenseInfo.getJSONObject("user");
 		this.user = new UserInfo(user.getString("name"), user.getString("email"), user.getString("nic"));
+
 		// vai validar certificado em licenca se é o mesmo do cc do user
 		this.user.uc.setLicenseCertificate(user.getString("certificate"));
-
+		
+		boolean userCCVerification = this.user.uc.VerifyUserByCC(this.user.uc.getLicenseCertificate());
+		
+		
+		//Le info do sistema e valida em construtor
 		JSONObject system = licenseInfo.getJSONObject("system");
-		this.system = new SystemInfo(system.getString("macAdress"), system.getString("motherBoardSerial"),
-				system.getString("userName"), system.getString("hostName"), system.getString("cpuSerial"));
+
+		this.system = new SystemInfo(system.getString("macAdress"), system.getString("motherBoardSerial"), system.getString("userName"), system.getString("hostName"), system.getString("cpuSerial"));
 
 		JSONObject app = licenseInfo.getJSONObject("app");
 
 		this.app = new ApplicationInfo(app.getString("appName"), app.getString("hash"), app.getDouble("version"), app.getString("appPubKey"));
 		//obtem assinatura de autor atraves de json
-		this.authorSignatureBytes = stringDecodeBase64(jsonLicense.getJSONObject("signature").getString("signature"));
+		this.validadorSignatureBytes = stringDecodeBase64(jsonLicense.getJSONObject("signature").getString("signature"));
 
-	
-
+		// chech cliente siganture
 		
+	      //Verifying the signature
+		Signature validadorSignature = Signature.getInstance("SHA256withRSA");
+		byte[] validadorSignatureBytes = stringDecodeBase64(jsonLicense.getJSONObject("signature").getString("signature"));
+	      //Calculating the signature
+	     
+
+	      //Initializing the signature
+	      
+	      validadorSignature.initVerify(getAuthorPublicKey());
+	      validadorSignature.update(jsonLicense.getJSONObject("licenseInfo").toString().getBytes());
+	      
+
+		if (!validadorSignature.verify(validadorSignatureBytes)) {
+			System.out.println("A Assinatura desta licença não é válida");
+			System.exit(1);
+		} else {
+			System.out.println("A Assinatura é válida");
+		}
+		
+		
+		
+		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		 currentDate = new Date(System.currentTimeMillis());
+
+				
 		  this.startDate = (Date)
 		  formatter.parse(licenseInfo.getJSONObject("dates").getString("startDate"));
 		  this.endDate = (Date)
 		  formatter.parse(licenseInfo.getJSONObject("dates").getString("endDate"));
+		  
+		  if(currentDate.after(endDate)) {
+			  System.out.println("A data de uso da sua licenca já expirou.\n Faça um novo pedido de licença.");
+			  System.exit(1);
+		  }
 		 
 
+	}
+	
+	
+	private static X509Certificate getClientCertificate(byte[] certificateBytes) throws CertificateException {
+		InputStream is = new ByteArrayInputStream(certificateBytes);
+		CertificateFactory fact = CertificateFactory.getInstance("X.509");
+		return (X509Certificate) fact.generateCertificate(is);
 	}
 
 }

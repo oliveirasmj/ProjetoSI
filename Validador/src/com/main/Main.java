@@ -20,6 +20,7 @@ import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Provider;
@@ -78,7 +79,7 @@ public class Main {
 				System.exit(0);
 			} else {
 				try {
-					   String privateKeyFilePath = "validadorPrivKey";
+					 String privateKeyFilePath = "validadorPrivKey";
 					
 					
 					//DEcifra assimetrica - para obter chave
@@ -112,6 +113,14 @@ public class Main {
 					} else {
 						System.out.println("License by cliente verified");
 					}
+					
+					//comparar HASH pedido com hash da nossa final da aplicação
+					String appHash = generateHash("ProgramJar.jar","SHA-256");
+					String jsonHash = licenseInfo.getJSONObject("app").getString("hash");
+					if(!appHash.equals(jsonHash)) {
+						System.out.println("Foi pedida uma licenca para uma aplicação que não é a nossa.");
+						System.exit(1);
+					}
 
 					// change licenseInfo
 					JSONObject date = new JSONObject();
@@ -144,9 +153,7 @@ public class Main {
 						pastaLicenca.mkdir();
 					
 					
-				/*	byte[] ciphered = cipher(key, licenseJSON.toString().getBytes(), rootParaLicenca+"iv");
-					
-					writeToFile(rootParaLicenca+"encryptedLicense", ciphered);*/
+				
 					
 					//Gerar chave simetrica para validar LICENCA
 					byte[] novaChaveSimetrica = generateKey();
@@ -182,8 +189,32 @@ public class Main {
 	}
 
 
+	  private static String generateHash(String filename, String algorithm){
+	        
+	        if(!algorithm.equals("MD5") && !algorithm.equals("SHA-1") && !algorithm.equals("SHA-256")){
+	            System.out.println("invalide algorithm");
+	            return "";
+	        }
+	        
+	        try{
+	            byte[] fileToHash = globalMethods.readFromFile(filename);
+	            
+	            MessageDigest digest = MessageDigest.getInstance(algorithm);
 
+	            byte[] hashed = digest.digest(fileToHash);
 
-	
+	            return BytesToHexString(hashed);
+	        } catch (Exception ex) {
+	            return "";
+	        }
+	    }
+
+	  private static  String BytesToHexString(byte[] arrayBytes) {
+		    StringBuffer stringBuffer = new StringBuffer();
+		        for (int i = 0; i < arrayBytes.length; i++) {
+		            stringBuffer.append(Integer.toString((arrayBytes[i] & 0xff) + 0x100, 16).substring(1));
+		        }
+		    return stringBuffer.toString();
+		}
 
 }
