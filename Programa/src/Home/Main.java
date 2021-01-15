@@ -31,7 +31,7 @@ import com.main.BibControlo;
 
 import UserInf.UserInfo;
 
-public class Program extends JFrame {
+public class Main extends JFrame {
 
 	
 
@@ -40,7 +40,7 @@ public class Program extends JFrame {
 		BibControlo cb = new BibControlo();
 
 		if (cb.verificaSeLicencaExiste()) {
-			Program home = new Program();
+			Main home = new Main();
 			home.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			home.setSize(500, 500);
 			home.setVisible(true);

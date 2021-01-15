@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Helpers;
 
 import static Helpers.globalMethods.writeToFile;
@@ -36,10 +31,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 
 public class SymmetricKey {
-    /**
-     * function used to generate a symmetric key , to be used to cipher a new license
-     * @return byte array of the key
-     */
+ 
+	
     public static byte[] generateKey() {
         try {
             KeyGenerator kg = KeyGenerator.getInstance("AES");
@@ -53,13 +46,7 @@ public class SymmetricKey {
     }
     
     
-    /**
-     * function used to cipher with a symmetric key
-     * @param secretKey symmetric key to use to cipher
-     * @param content content to be ciphered
-     * @return byte array with the content ciphered
-     * @throws IOException 
-     */
+ 
     public static  byte[] cipher(byte[] secretKey, byte[] content,String pathToIV) throws IOException{
     
     	
@@ -89,12 +76,7 @@ public class SymmetricKey {
     
   
 
-	/**
-     * function used to decipher with a symmetric key
-     * @param secretKey symmetric key used to decipher the content
-     * @param content content to be deciphered
-     * @return byte array of the deciphered content
-     */
+	
     public static byte[] decipher(byte[] secretKey, byte[] content,String pathToIV){
     	
     	

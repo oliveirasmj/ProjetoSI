@@ -33,7 +33,7 @@ import org.json.JSONObject;
 
 import AppInfo.ApplicationInfo;
 import SystemInfo.SystemInfo;
-import UserInf.UserCrypto;
+import UserInf.FunctionCC;
 import UserInf.UserInfo;
 
 public class Licenca {
@@ -48,14 +48,14 @@ public class Licenca {
 	private Date endDate;
 	private Date currentDate;
 
-	// private siganture
+
 	private byte[] validadorSignatureBytes;
-	private JSONObject licenseInfo; // use for cheking author siganture
+	private JSONObject licenseInfo; 
 
 	public Licenca() {
 	}
 
-	//public boolean geraNovaLicenca(String dirParaJar, double appVersion, byte[] appPubKey) throws IOException {
+	
 	public boolean geraNovaLicenca(String dirParaJar, double appVersion, BibControlo bib) throws IOException {
 		try {
 			Scanner sc = new Scanner(System.in);
@@ -98,7 +98,7 @@ public class Licenca {
 			String stringAppPubKey = bytesEncodeBase64(bib.getAppPubKey());
 			
 			
-		//	String stringAppPubKey = bytesEncodeBase64(appPubKey);
+	
 			
 			app = new ApplicationInfo(dirParaJar, appVersion, "SHA-256",stringAppPubKey );
 

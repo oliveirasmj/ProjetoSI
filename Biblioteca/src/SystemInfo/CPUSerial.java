@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package SystemInfo;
 
 import java.io.BufferedReader;
@@ -28,10 +23,7 @@ public class CPUSerial {
         }
     }
     
-     /*
-     * Captura serial da CPU no WINDOWS, atraves da execucao de script visual
-     * basic
-     */
+ 
     private static String getCPUSerialWindows() {
         String result = "";
         try {
@@ -65,10 +57,7 @@ public class CPUSerial {
         return result.trim();
     }
 
-    /*
-     * Captura serial de CPU em sistemas Linux, atraves da execucao de comandos
-     * em shell.
-     */
+  
     private static String getCPUSerialLinux() {
         String result = "";
         try {

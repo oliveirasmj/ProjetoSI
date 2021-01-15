@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package SystemInfo;
 
 import java.io.BufferedReader;
@@ -13,11 +8,7 @@ import java.io.InputStreamReader;
 
 public class MotherboardSerial {
     
-    //change
-    /** 
-     * Method for get System MotherboardSerial Serial Number
-     * @return  MAC Address
-     */
+ 
     public static String getSystemMotherBoard_SerialNumber(){
         try{
             String OSName=  System.getProperty("os.name");
@@ -33,11 +24,7 @@ public class MotherboardSerial {
         }
     }
     
-    //change
-    /**
-     * Method for get Windows Machine MotherBoard Serial Number
-     * @return 
-     */
+ 
     private static String getWindowsMotherboard_SerialNumber() {
         String result = "";
         try {

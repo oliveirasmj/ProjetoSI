@@ -16,7 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import AppInfo.ApplicationInfo;
-import Helpers.WriteToFile;
 import SystemInfo.SystemInfo;
 import UserInf.UserInfo;
 
@@ -137,7 +136,7 @@ public class BibControlo {
 		
 
 			if (encryptedLicenseFile.exists()) {
-				System.out.println("decrypting license file");
+				System.out.println("A decifrar o ficheiro da licença.");
 				// decript file
 			
 				

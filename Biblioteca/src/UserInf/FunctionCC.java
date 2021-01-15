@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package UserInf;
 
 import java.io.FileInputStream;
@@ -34,33 +29,32 @@ import java.io.InputStream;
 import java.util.Random;
 
 
-public class UserCrypto {
+public class FunctionCC {
     
     private Provider ccProvider; 
     private KeyStore ks;
-    private Certificate licenseCertificate; //used only when using for imported lincese
+    private Certificate licenseCertificate; 
 
-    public UserCrypto() {
+    public FunctionCC() {
         try {
            this.ccProvider = Security.getProvider("SunPKCS11-CartaoCidadao");
             this.ks = KeyStore.getInstance("PKCS11",ccProvider);
             this.ks.load(null,null);
           
         } catch (KeyStoreException ex ) {
-            Logger.getLogger(UserCrypto.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FunctionCC.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(UserCrypto.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FunctionCC.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(UserCrypto.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FunctionCC.class.getName()).log(Level.SEVERE, null, ex);
         } catch (CertificateException ex) {
-            Logger.getLogger(UserCrypto.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FunctionCC.class.getName()).log(Level.SEVERE, null, ex);
         } 
         
     }
     
     /**
-     * function used to get the signature byes of a data
-     * CODIGO DE ASSINATURA / AUTENTICACAO
+     * funcao utilizada para obter bytes de signature
      * @param array de bytes a serem assinados
      * @return Array de bytes
      * @throws KeyStoreException
@@ -79,31 +73,31 @@ public class UserCrypto {
     }
     
     /**
-     * function that gets ths user certificate from the CC
+     * funcao para obter certeficado do cc
      * @return Certificate
      */
     public Certificate getPublicCertificate () {
         try {
             return this.ks.getCertificate("CITIZEN AUTHENTICATION CERTIFICATE");
         }catch (KeyStoreException ex) {
-            Logger.getLogger(UserCrypto.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FunctionCC.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
     
         
     /**
-     * function used to get the public key from a given certificate
-     * @param cer certificate to extract public key
-     * @return PublicKey
+     * funcao utilizada para obter a chave publica do cc 
+     * @param cer certeficado utilizado para obter a chave publica
+     * @return chave publica
      */
     public PublicKey getPublicKey (Certificate cer){
         return cer.getPublicKey();
     }
 
     /**
-     * function used to set a certificate from the license
-     * @param certificateEncodedString string encoded in base64 that representes the certificate
+     * funcao utilizada para obter o certeficado da licença
+     * @param certificateEncodedString string do certeficado encoded em 64bits
      * @throws CertificateException 
      */
     public void setLicenseCertificate(String certificateEncodedString) throws CertificateException {
@@ -111,7 +105,7 @@ public class UserCrypto {
         CertificateFactory fact = CertificateFactory.getInstance("X.509");
         X509Certificate cert = (X509Certificate) fact.generateCertificate(is);
         this.licenseCertificate = cert;
-        System.out.println("license certificate inserted");
+        System.out.println("Certeficado da licença inserido.");
         verificarCertificado(cert.getEncoded());
     }
     
@@ -121,9 +115,9 @@ public class UserCrypto {
     }
     
     /**
-     * function used to verify if the currentUser is the valide user
-     * @param licenseCertificate certificate of the license 
-     * @return true if the user is valide, otherwise returns false
+     * funcao utilizada para verificar se um utilizado é valido
+     * @param licenseCertificate certeficado em licenca
+     * @return true se utilizador valido
      * @throws NoSuchAlgorithmException
      * @throws KeyStoreException
      * @throws UnrecoverableKeyException
@@ -147,9 +141,9 @@ public class UserCrypto {
     }
     
     /**
-     * function used to verify if a given certificate is valid
-     * @param certificateBytes certificate bytes
-     * @return true if the certificate is valid, otherwise return false
+     *  funcao para verificar se certeficado é válido
+     * @param certificateBytes bytes de certeficado
+     * @return tru se certeficado válido
      */
     public boolean verificarCertificado(byte[] certificateBytes){
         try {

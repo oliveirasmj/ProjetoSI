@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Helpers;
 
 import static Helpers.globalMethods.readFromFile;
@@ -31,12 +26,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 
 public class AsymmetricKey {
-    /**
-     * function used cipher content using a asymmetric key
-     * @param publicKeyBytes byte array that represents the public key to be used
-     * @param content content to be ciphered
-     * @return byte array of the ciphered content
-     */
+  
     public static byte[] asymmetricCipher(byte[] publicKeyBytes, byte[] content){
         try {
             KeyFactory factory = KeyFactory.getInstance("RSA");
@@ -53,12 +43,7 @@ public class AsymmetricKey {
         
     }
     
-    /**
-     * function used to deciphered content using a asymmetric key
-     * @param privateKeyBytes byte array that represents the private key to be used
-     * @param content content to be deciphered
-     * @return byte array with the deciphered content
-     */
+ 
     public static byte[] asymmetricDecipher(byte[] privateKeyBytes, byte[] content){
         try {            
             KeyFactory factory = KeyFactory.getInstance("RSA");
@@ -116,8 +101,7 @@ public class AsymmetricKey {
 	
 		writeToFile(nomeFicheiroEncryptado,	ci.doFinal(chavePrivAEncryptar) );
 		
-	/*	File delAppPrivKey = new File(caminhoParaChaveAEncryptar);
-		delAppPrivKey.delete();*/
+
 		
 	}
 	   
@@ -143,8 +127,7 @@ public class AsymmetricKey {
 				
 				
 				byte[] privKeyDesencriptada = ci.doFinal(readFromFile(caminhoParaChaveEncryptada));
-				
-			//	writeToFile(nomeFicheiroDesencryptado, privKeyDesencriptada);
+		
 				
 				return privKeyDesencriptada;
 

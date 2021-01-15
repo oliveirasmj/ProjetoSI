@@ -93,7 +93,7 @@ public class Main {
 					//decifra simetrica
 					byte[] encryptedLicenseByte = readFromFile(rootParaDirBI+"/cipheredLicenseRequest");
 					byte[] licenseBytes = decipher(key, encryptedLicenseByte,rootParaDirBI);
-					System.out.println("generated license file");
+					System.out.println("Foi gerado o ficheiro da licenca.");
 
 					JSONObject licenseJSON = new JSONObject(bytesToStringPrint(licenseBytes));
 					JSONObject licenseInfo = licenseJSON.getJSONObject("licenseInfo");
@@ -104,14 +104,15 @@ public class Main {
 					byte[] appPubKey = stringDecodeBase64( licenseInfo.getJSONObject("app").getString("appPubKey"));
 					
 					Signature clientSignature = Signature.getInstance("SHA256withRSA");
+					//Initializing the signature
 					clientSignature.initVerify(getClientCertificate(clienteCertificate));
 					clientSignature.update(licenseInfo.toString().getBytes());
-					
+					  //Verifying the signature
 					if (!clientSignature.verify(clienteSignatureBytes)) {
-						System.out.println("not valid license");
+						System.out.println("A licenca não é válida.");
 						System.exit(1);
 					} else {
-						System.out.println("License by cliente verified");
+						System.out.println("A Licenca foi validada com sucesso.");
 					}
 					
 					//comparar HASH pedido com hash da nossa final da aplicação

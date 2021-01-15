@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package AppInfo;
 
 import java.security.MessageDigest;
@@ -28,12 +23,7 @@ public class ApplicationInfo {
         this.appPubKey =  pubKey;
     }
     
-    /**
-     * used when this class is set by a license
-     * @param appName
-     * @param hash
-     * @param version 
-     */
+
     public ApplicationInfo(String appName, String hash,double version,String pubKey) {
         this.appName = appName;
         this.version = version;
@@ -63,11 +53,7 @@ public class ApplicationInfo {
         return hash;
     }
     
-    /**
-     * function used to return the ApplicationInfo object as a JSON object
-     * @return JSONObject
-     * @throws JSONException 
-     */
+
     public JSONObject toJSON() throws JSONException{
         JSONObject obj = new JSONObject();
         obj.put("appName", this.appName);
@@ -87,12 +73,7 @@ public class ApplicationInfo {
 				+ appPubKey + "]";
 	}
 
-	/**
-     * function used to generate the hash of the application
-     * @param filename name of the file to hash
-     * @param algorithm algorithm used to hash
-     * @return String of the hash
-     */
+
     private String generateHash(String filename, String algorithm){
         
         if(!algorithm.equals("MD5") && !algorithm.equals("SHA-1") && !algorithm.equals("SHA-256")){
@@ -113,11 +94,7 @@ public class ApplicationInfo {
         }
     }
     
-    /**
-     * function used to convert hash bytes to its hex value
-     * @param arrayBytes hash bytes
-     * @return String of the hash bytes
-     */
+
     private String BytesToHexString(byte[] arrayBytes) {
     StringBuffer stringBuffer = new StringBuffer();
         for (int i = 0; i < arrayBytes.length; i++) {

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package UserInf;
 
 import static Helpers.globalMethods.bytesEncodeBase64;
@@ -17,19 +12,19 @@ import org.json.JSONObject;
 public class UserInfo {
 
     private String name, email,nic;
-    public UserCrypto uc;
+    public FunctionCC uc;
 
 
     //chamanda em verifica se existe
     public UserInfo(){
-        this.uc =  new UserCrypto();
+        this.uc =  new FunctionCC();
         setInfoFromCertificate();
     }
     
     //chamada para gerar licenca
     public UserInfo(String email){
     	this.email = email;
-        this.uc =  new UserCrypto();
+        this.uc =  new FunctionCC();
         setInfoFromCertificate();
     }
     
@@ -38,7 +33,7 @@ public class UserInfo {
         this.name = name;
         this.email = email;
         this.nic = nic;
-        this.uc = new UserCrypto();
+        this.uc = new FunctionCC();
     }
 
     public String getName() {
@@ -66,7 +61,7 @@ public class UserInfo {
     }
     
     /**
-     * function used to set the currentUser information from his certificate
+     * funcao utilizada para obter dados do utilizador atual
      */
     private void setInfoFromCertificate(){
         String[] s = uc.getPublicCertificate().toString().split(",");
@@ -85,12 +80,8 @@ public class UserInfo {
     	
     	 byte[] certificate = uc.getPublicCertificate().getEncoded();
     	 
-       /* String path = "licencas/" + this.nic + "/temp/";
-         File dir = new File(path);
-         if(!dir.exists())
-             dir.mkdir(); */
-         
-         
+
+        
          //verificar o certificado do utilizador
          if(uc.verificarCertificado(certificate))
         	 UserObj.put("certificate", bytesEncodeBase64(certificate));
